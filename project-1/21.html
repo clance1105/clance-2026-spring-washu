@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SKYLODGE Menu</title>
+
+  <!-- (Optional) favicon -->
+  <!-- <link rel="icon" type="image/png" href="favicon.png"> -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background:
+        radial-gradient(circle at top, rgb(164, 223, 255), transparent 45%),
+        linear-gradient(180deg, #74d5ff 0%, #ffffff 60%, #74d5ff 100%);
+      font-family: "Comic Neue", sans-serif;
+      margin: 0;
+      padding: 40px;
+      color: #000000;
+      box-sizing: border-box;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Happy hour overlay (OFF by default) */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+
+      background:
+        radial-gradient(circle at top, rgba(255, 140, 0, 0.496), transparent 45%),
+        linear-gradient(180deg, #310505 0%, #dd187163 60%, #6f3241 100%);
+
+      opacity: 0;
+      transition: opacity 900ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    /* When happy hour is active */
+    body.happy-hour::before{
+      opacity: 1;
+    }
+
+    /* ---- DRAMATIC scroll reveal ---- */
+    :root{
+      --dur: 1100ms;
+      --ease: cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .reveal{
+      opacity:0;
+      transform: translateY(52px) scale(0.985);
+      filter: blur(10px);
+      transition:
+        opacity var(--dur) var(--ease),
+        transform var(--dur) var(--ease),
+        filter var(--dur) var(--ease);
+      will-change: opacity, transform, filter;
+      transition-delay: var(--delay, 0ms);
+    }
+
+    .reveal.in-view{
+      opacity:1;
+      transform: translateY(0) scale(1);
+      filter: blur(0px);
+    }
+
+    /* extra drama for images (in case you add any later) */
+    .reveal.img{ transform: translateY(64px) scale(0.94); }
+    .reveal.img.in-view{ transform: translateY(0) scale(1); }
+
+    @media (prefers-reduced-motion: reduce){
+      .reveal{
+        opacity:1;
+        transform:none;
+        filter:none;
+        transition:none;
+      }
+    }
+    /* ------------------------------- */
+
+    .menu {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+
+      background: #bebebe;
+      color: #000000;
+      border-radius: 18px;
+      padding: 28px;
+      box-sizing: border-box;
+      overflow: auto;
+      opacity: 0.6;
+    }
+
+    .skylodge {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      opacity: 1;
+    }
+
+    .inline-img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 18px 0;
+      opacity: 0.85;
+    }
+
+    h1 {
+      font-family: "Lobster", cursive;
+      font-size: 35px;
+      text-align: center;
+      letter-spacing: 0.7em;
+      margin-bottom: 20px;
+    }
+
+ h3 {
+  font-family: "Lobster", cursive;
+  font-size: 50px;
+  text-align: center;
+  letter-spacing: 0.7em;
+  margin-bottom: 60px;
+}
+
+
+    .menu-line {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+    }
+
+    .menu-line .label { font-weight: 700; }
+
+    .menu-line .rule {
+      flex: 1;
+      height: 1px;
+      background: #000000;
+      opacity: 0.4;
+      margin: 0 100px;
+    }
+
+    .menu-line .price { font-weight: 700; }
+
+    h2 {
+      font-style: normal;
+      text-align: center;
+      font-size: 19px;
+      margin: 40px 0 6px;
+      letter-spacing: 0.1em;
+      opacity: 0.9;
+    }
+    .container{  
+    display: flex;
+    gap: 20px;
+}
+  
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      font-family: "Sans Serif", Garamond;
+      font-style: bold;
+      display: flex;
+      justify-content: space-between;
+      font-size: px;
+      line-height: 1.7;
+      letter-spacing: 0.05em;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.18);
+    }
+
+    li span:last-child { font-weight: 700; }
+
+    /* iPhone spacing so it doesn’t feel cramped */
+    @media (max-width: 520px){
+      body { padding: 18px; }
+      .menu { padding: 18px; border-radius: 16px; }
+      h3 { font-size: 42px; letter-spacing: 0.45em; }
+      h1 { letter-spacing: 0.5em; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h3 class="reveal">WINE LIST</h3>
+
+  
+  <h1 class="reveal">RED</h1>
+  <ul class="reveal">
+    <li><span>Pinot Noir</span><span>12</span></li>
+    <li><span>House Merlot</span><span>8</span></li>
+    <li><span>Cabernet Sauvignon</span><span>6</span></li>
+  </ul>
+
+  <h1 class="reveal">WHITE</h1>
+  <ul class="reveal">
+    <li><span>Sauvignon Blanc</span><span>42</span></li>
+    <li><span>Pinot Grigio</span><span>51</span></li>
+    <li><span>Chardonnay</span><span>35</span></li>
+  </ul>
+
+  <!-- REVEAL + HAPPY HOUR -->
+  <script>
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const baseStagger = 120; // ms between elements
+    const liStagger   = 90;  // ms between list items
+
+    const revealEls = Array.from(document.querySelectorAll('.reveal'));
+
+    // choreographed delays
+    revealEls.forEach((el, i) => {
+      el.style.setProperty('--delay', `${i * baseStagger}ms`);
+    });
+
+    // cascade list items (each time UL enters view)
+    document.querySelectorAll('ul.reveal').forEach(ul => {
+      ul.querySelectorAll('li').forEach((li, idx) => {
+        li.classList.add('reveal');
+        li.style.setProperty('--delay', `${(idx + 1) * liStagger}ms`);
+      });
+    });
+
+    if (!prefersReduced) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const el = entry.target;
+
+          if (entry.isIntersecting) {
+            el.classList.add('in-view');
+
+            if (el.tagName === 'UL') {
+              el.querySelectorAll('li.reveal').forEach(li => li.classList.add('in-view'));
+            }
+          } else {
+            // reset so it replays when you scroll back
+            el.classList.remove('in-view');
+
+            if (el.tagName === 'UL') {
+              el.querySelectorAll('li.reveal').forEach(li => li.classList.remove('in-view'));
+            }
+          }
+        });
+      }, {
+        threshold: 0.35,
+        rootMargin: "0px 0px -10% 0px"
+      });
+
+      // Observe only top-level reveals (not the li’s; those are controlled by their UL)
+      revealEls.forEach(el => {
+        if (el.tagName !== 'LI') io.observe(el);
+      });
+
+    } else {
+      // reduced motion: always visible
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+    }
+
+    // ------------------------------
+    // HAPPY HOUR BACKGROUND (5–9pm Mountain Time)
+    // ------------------------------
+    function updateHappyHourBackground(){
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Denver',
+        hour: 'numeric',
+        hour12: false
+      }).formatToParts(new Date());
+
+      const hour = Number(parts.find(p => p.type === 'hour')?.value);
+
+      // active from 17:00 up to (but not including) 21:00
+      const isHappyHour = hour >= 17 && hour < 21;
+
+      document.body.classList.toggle('happy-hour', isHappyHour);
+    }
+
+    updateHappyHourBackground();
+    setInterval(updateHappyHourBackground, 30 * 1000);
+  </script>
+
+</body>
+</html>

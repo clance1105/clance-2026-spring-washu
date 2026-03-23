@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invisible Cities</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --panel: #111111;
+      --text: #f4f4f4;
+      --muted: #cfcfcf;
+      --gray: #353535;
+      --light-gray: #d9d9d9;
+      --red: #d41414;
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #222 0%, #111 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+
+    .wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(280px, 1fr));
+      gap: 34px;
+      align-items: start;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 340px;
+      min-height: 630px;
+      margin: 0 auto;
+      background: #000;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero {
+      background: #000;
+      padding: 16px 14px 10px;
+    }
+
+    .book-title {
+      color: #fff;
+      text-transform: uppercase;
+      line-height: 0.9;
+      font-weight: 900;
+      letter-spacing: -1.4px;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .author {
+      color: #fff;
+      font-size: 1rem;
+      text-align: right;
+      margin-top: 10px;
+      margin-right: 4px;
+    }
+
+    .tabs {
+      display: flex;
+      background: #2e2e2e;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 14px 10px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.1rem;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .tab:hover,
+    .tab.active {
+      background: #444;
+    }
+
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      background: #000;
+    }
+
+    .section {
+      padding: 16px 18px 24px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.85rem;
+      font-weight: 900;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .body-copy {
+      color: #efefef;
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    .body-copy p + p {
+      margin-top: 10px;
+    }
+
+    .map-panel {
+      background: #000;
+    }
+
+    .map-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 0.83 / 1;
+      overflow: hidden;
+      border-top: 1px solid #202020;
+      border-bottom: 1px solid #202020;
+      background: #000;
+    }
+
+    .map-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.05) saturate(0.95);
+    }
+
+    .pin {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 999px 999px 999px 0;
+      background: #f04a23;
+      transform: rotate(-45deg);
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      transition: transform 0.18s ease, filter 0.18s ease;
+    }
+
+    .pin::after {
+      content: "";
+      position: absolute;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: white;
+      top: 10px;
+      left: 10px;
+    }
+
+    .pin:hover,
+    .pin:focus-visible {
+      transform: rotate(-45deg) scale(1.12);
+      filter: brightness(1.1);
+      outline: none;
+    }
+
+    .pin-label {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 12px);
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.92);
+      color: white;
+      padding: 8px 10px;
+      min-width: 160px;
+      max-width: 210px;
+      border: 1px solid rgba(255,255,255,0.15);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 5;
+    }
+
+    .pin-label strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .pin-label span {
+      display: block;
+      font-size: 0.75rem;
+      line-height: 1.35;
+      color: #e2e2e2;
+    }
+
+    .pin-wrap {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+    }
+
+    .pin-wrap:hover .pin-label,
+    .pin-wrap:focus-within .pin-label {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .map-caption {
+      padding: 14px 18px 20px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .map-caption h3 {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 400;
+    }
+
+    .map-caption p {
+      font-size: 0.9rem;
+      line-height: 1.35;
+      color: #f0f0f0;
+      text-align: left;
+    }
+
+    .city-page {
+      background: #000;
+    }
+
+    .city-header {
+      background: var(--red);
+      color: white;
+      padding: 16px 14px;
+      font-size: clamp(1.6rem, 4.4vw, 2.45rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 0.95;
+    }
+
+    .city-visual {
+      background: var(--light-gray);
+      min-height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .city-visual-inner {
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      border: 4px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--red);
+      font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(212,20,20,0.15), transparent 18%),
+        radial-gradient(circle at 75% 65%, rgba(212,20,20,0.12), transparent 22%),
+        linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+    }
+
+    .city-content {
+      padding: 16px 18px 22px;
+      font-size: 0.92rem;
+      line-height: 1.42;
+      color: white;
+    }
+
+    .city-content p + p {
+      margin-top: 10px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 14px;
+      color: white;
+      text-decoration: none;
+      font-weight: 800;
+      border-bottom: 2px solid var(--red);
+      padding-bottom: 2px;
+    }
+
+    .small-note {
+      opacity: 0.75;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 1050px) {
+      .wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .phone {
+        max-width: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- ABOUT + MAP SCROLLABLE IN SAME PAGE -->
+    <section class="phone">
+      <div class="hero">
+        <div class="book-title">Invisible<br>Cities</div>
+        <div class="author">Italo Calvino</div>
+      </div>
+
+      <nav class="tabs">
+        <a href="#about-section" class="tab active">ABOUT</a>
+        <a href="#map-section" class="tab">MAP</a>
+      </nav>
+
+      <div class="scroll-area" id="main-scroll-area">
+        <section class="section" id="about-section">
+          <h2 class="section-title">About</h2>
+          <div class="body-copy">
+            <p><em>Invisible Cities</em> imagines cities less as fixed places and more as fragments of memory, symbols, desires, and contradictions. Each city becomes an idea as much as a location.</p>
+            <p>This concept turns the city into a clickable archive. The map does not behave like a literal diagram. Instead, it acts more like a field of associations: each marker is an entry point into one urban condition, one story, one atmosphere.</p>
+            <p>On this page, the about text and map sit together in one continuous scroll, so reading and wandering happen in the same space. Hovering over a marker reveals a title and short summary below, and clicking opens the full city page.</p>
+            <p>You can duplicate the marker structure to add more cities later, each with its own title, summary, image treatment, and descriptive text.</p>
+          </div>
+        </section>
+
+        <section class="section map-panel" id="map-section">
+          <div class="map-frame">
+            <img src="" alt="Abstract city map collage" />
+
+            <!-- CITY PIN -->
+            <div class="pin-wrap" style="top: 18%; left: 28%;">
+              <a class="pin" href="#city-zaira" data-title="Zaira" data-summary="A city made of memories, measures, and traces of past relationships."></a>
+              <div class="pin-label">
+                <strong>Zaira</strong>
+                <span>A city made of memories, measures, and traces of past relationships.</span>
+              </div>
+            </div>
+
+            <!-- extra decorative pins you can later turn into more cities -->
+            <div class="pin-wrap" style="top: 34%; left: 56%;">
+              <button class="pin" type="button" data-title="Future City" data-summary="Placeholder marker for another chapter or urban condition."></button>
+              <div class="pin-label">
+                <strong>Future City</strong>
+                <span>Placeholder marker for another chapter or urban condition.</span>
+              </div>
+            </div>
+
+            <div class="pin-wrap" style="top: 46%; left: 72%;">
+              <button class="pin" type="button" data-title="Future City" data-summary="Add another clickable city by linking this marker to a new section."></button>
+              <div class="pin-label">
+                <strong>Future City</strong>
+                <span>Add another clickable city by linking this marker to a new section.</span>
+              </div>
+            </div>
+
+            <div class="pin-wrap" style="top: 61%; left: 25%;">
+              <button class="pin" type="button" data-title="Future City" data-summary="Use these as narrative anchors across the map."></button>
+              <div class="pin-label">
+                <strong>Future City</strong>
+                <span>Use these as narrative anchors across the map.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-caption" id="map-caption">
+            <h3 id="caption-title">Hover a marker</h3>
+            <p id="caption-summary">When you hover over a map pin, its city title and summary appear here. Click the Zaira marker to open the city page.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+  
+
+    <!-- CITY DETAIL PAGE -->
+    <section class="phone city-page" id="city-zaira">
+      <div class="hero">
+        <div class="book-title">Invisible<br>Cities</div>
+        <div class="author">Italo Calvino</div>
+      </div>
+
+      <div class="city-header">Zaira</div>
+
+      <div class="city-visual">
+        <div class="city-visual-inner">Memory / Trace / Measure</div>
+      </div>
+
+      <div class="city-content">
+        <p>Zaira does not disclose its past directly. Instead, the city holds its history in alignments, distances, scars, repetitions, and the physical residue of lives once lived. Its meaning comes from relations rather than isolated objects.</p>
+        <p>In this web version, the city page acts like an expanded reading condition. The red title bar isolates the city as a chapter, while the pale field becomes a space for an image, drawing, collage, or ornamental graphic.</p>
+        <p>You can replace this text with your own reading of one city from <em>Invisible Cities</em>, add an image in the gray zone, or use it for a more graphic composition.</p>
+        <a class="back-link" href="#about-section">Back to about / map</a>
+        <div class="small-note">To add more cities, duplicate this whole phone panel or convert the layout into separate pages later.</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const allPins = document.querySelectorAll('.pin');
+    const captionTitle = document.getElementById('caption-title');
+    const captionSummary = document.getElementById('caption-summary');
+    const previewTitle = document.getElementById('preview-caption-title');
+    const previewSummary = document.getElementById('preview-caption-summary');
+
+    allPins.forEach((pin) => {
+      pin.addEventListener('mouseenter', () => {
+        const title = pin.dataset.title || 'Untitled City';
+        const summary = pin.dataset.summary || 'No summary yet.';
+
+        if (captionTitle) captionTitle.textContent = title;
+        if (captionSummary) captionSummary.textContent = summary;
+        if (previewTitle) previewTitle.textContent = title;
+        if (previewSummary) previewSummary.textContent = summary;
+      });
+
+      pin.addEventListener('focus', () => {
+        const title = pin.dataset.title || 'Untitled City';
+        const summary = pin.dataset.summary || 'No summary yet.';
+
+        if (captionTitle) captionTitle.textContent = title;
+        if (captionSummary) captionSummary.textContent = summary;
+        if (previewTitle) previewTitle.textContent = title;
+        if (previewSummary) previewSummary.textContent = summary;
+      });
+    });
+  </script>
+</body>
+</html>

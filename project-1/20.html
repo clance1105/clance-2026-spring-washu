@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>SKYLODGE Menu</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <title>SKYLODGE Menu</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Skylodge at Powder Mountain, Utah. Elevated alpine dining featuring cocktails, wine, and mountain-inspired plates.">
+  <meta name="keywords" content="Skylodge, Powder Mountain, Utah dining, mountain restaurant, wine list, cocktails, alpine menu">
+  <meta name="author" content="Skylodge">
+
+  <meta property="og:title" content="Skylodge | Powder Mountain Utah">
+  <meta property="og:description" content="Alpine dining experience at Powder Mountain. Cocktails, wine, and mountain plates.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="Screenshot 2026-02-11 121152.png">
+
+  <meta name="theme-color" content="#9fc2dc">
+
+ <link rel="icon" type="image/png" href="../assets/images/Screenshot 2026-02-11 121152.png">
+
+  <style>
+body{
+  /* default: mostly-white gradient */
+  background: linear-gradient(180deg, #9fc2dc  0%, #ffffff 45%, #9fc2dc  100%);
+  font-family:"Comic Neue", sans-serif;
+  margin:0;
+  padding:40px;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Happy hour overlay  */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+
+  background:
+    radial-gradient(circle at top, rgba(255, 140, 0, 0.496), transparent 45%),
+    linear-gradient(180deg, #310505 0%, #dd187163 60%, #6f3241 100%);
+
+  opacity: 0;                  /* OFF by default */
+  transition: opacity 900ms cubic-bezier(.16, 1, .3, 1);
+}
+
+/* When happy hour is active */
+body.happy-hour::before{
+  opacity: 1;
+}
+
+
+/* ---- USED CHATGPT FOR HELP -- ADDED: DRAMATIC scroll reveal ---- */
+:root{
+  --dur: 1100ms;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+.reveal{
+  opacity:0;
+  transform: translateY(52px) scale(0.985);
+  filter: blur(10px);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    filter var(--dur) var(--ease);
+  will-change: opacity, transform, filter;
+}
+
+.reveal.in-view{
+  opacity:1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+}
+
+/* extra drama for images */
+.reveal.img{
+  transform: translateY(64px) scale(0.94);
+}
+.reveal.img.in-view{
+  transform: translateY(0) scale(1);
+}
+
+/* stagger support (set via JS inline style) */
+.reveal{ transition-delay: var(--delay, 0ms); }
+
+@media (prefers-reduced-motion: reduce){
+  .reveal{
+    opacity:1;
+    transform:none;
+    filter:none;
+    transition:none;
+  }
+}
+/* --------------------------------------- */
+
+
+.menu{
+  width:100%;        
+  max-width:12000px;     
+  margin:0 auto;       
+
+  background:#000000;
+  color:#000000;
+  border-radius:18px;
+  padding:28px;
+
+  box-sizing:border-box;
+  overflow:auto;
+}
+
+h3{
+  font-family:"Lobster", cursive;
+  font-size:54px;
+  text-align:center;
+  letter-spacing:0.55em;
+  margin:10px 0 16px;
+  color: #000000;
+}
+
+h2{
+  text-align:center;
+  font-size:13px;
+  margin:8px 0;
+  letter-spacing:0.22em;
+  opacity:.85;
+}
+
+.skylodge{
+  width:100%;
+  height:400px;
+  object-fit:cover;
+  border-radius:12px;
+  margin:18px 0 28px;
+  opacity:.9;
+}
+
+h1{
+  float:left;
+  width:28%;
+  font-family:"Lobster", cursive;
+  font-size:30px;
+  letter-spacing:0.35em;
+  margin:10px 0 18px;
+  padding:14px 10px;
+  box-sizing:border-box;
+  text-align:left;
+}
+
+ul{
+  float:right;
+  width:72%;
+  list-style:none;
+  padding:6px 0 18px 18px;
+  margin:0;
+  box-sizing:border-box;
+}
+
+li{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1.5px dashed rgba(0, 0, 0, 0.18);
+  letter-spacing:0.05em;
+}
+
+/* Clear floats after each section */
+.inline-img{
+  clear:both;
+  width:100%;
+  height:400px;
+  object-fit:cover;
+  border-radius:12px;
+  margin:22px 0 10px;
+  opacity:.85;
+}
+
+li span:last-child{ font-weight:700; }
+
+a{ color:#000000; text-decoration:none; }
+a:hover{ text-decoration:underline; }
+
+/* ---------- RESPONSIVE: stack section title above items ---------- */
+@media (max-width: 820px){
+  h1,
+  ul{
+    text-align: center;
+    float: none;
+    width: 100%;
+  }
+
+  h1{
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    margin: 18px 0 8px;
+    padding: 14px 10px 12px;
+  }
+
+  ul{
+    padding: 10px 0 18px 0;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+<img
+  id="topHero"
+  class="skylodge reveal img"
+  src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwepMsAPhdayU3I8YPqVRo6peMiyjzGig5XW0w32U2_Y6xJM8BaFKKwoLX7nX518VpkrUGBxmlrL1LeCYol3nWqyKpNkHwxCs0fT94E6abnKFf0kKQUoRk0uglgsHB_Qu1p6MGE3ofg=s1360-w1360-h1020-rw"
+  data-default-src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwepMsAPhdayU3I8YPqVRo6peMiyjzGig5XW0w32U2_Y6xJM8BaFKKwoLX7nX518VpkrUGBxmlrL1LeCYol3nWqyKpNkHwxCs0fT94E6abnKFf0kKQUoRk0uglgsHB_Qu1p6MGE3ofg=s1360-w1360-h1020-rw"
+  alt="Mountain lodge"
+/>
+  
+      <h3 class="reveal">SKYLODGE</h3>
+      <a href="https://powdermountain.com/"><b><h2 class="reveal">POWDER MOUNTAIN UTAH</h2></b></a>
+      <a href="21.html"><b><h2 class="reveal">WINE LIST</h2></b></a>
+
+    
+   <img
+      class="inline-img reveal img"
+      src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe"
+      alt="Food"
+    />
+
+
+    <h1 class="reveal">Peckish</h1>
+    <ul class="reveal">
+      <li><span>Peach and Basil</span><span>12</span></li>
+      <li><span>Beet and Goat Cheese</span><span>8</span></li>
+      <li><span>Caprese Skewers</span><span>6</span></li>
+    </ul>
+
+ 
+    <img
+      class="inline-img reveal img"
+      src="https://cdn-ilbdein.nitrocdn.com/qkShIANPFbpxPxJgBxbDTPbtLAOnqaCy/assets/images/optimized/rev-95f7a86/thehonestbison.com/wp-content/uploads/elk-bbq-brisket-sliders-recipe.jpg"
+      alt="Cocktail"
+    />
+
+
+    <h1 class="reveal">Hungry</h1>
+    <ul class="reveal">
+      <li><span>Chicken Strips</span><span>14</span></li>
+      <li><span>Elk Sliders</span><span>18</span></li>
+      <li><span>Grilled Eggplant</span><span>24</span></li>
+    </ul>
+
+
+
+        <img
+      class="inline-img reveal img"
+      src="https://fireandiceontobycreek.com/wp-content/uploads/2022/04/cocktails.png"
+      alt="Cocktail"
+    />
+
+    <h1 class="reveal">Thirsty</h1>
+    <ul class="reveal">
+      <li><span>Mountain Old Fashioned</span><span>11</span></li>
+      <li><span>Grasshopper</span><span>9</span></li>
+      <li><span>Sky Toddy</span><span>12</span></li>
+    </ul>
+
+
+    
+  </div>
+
+
+  <!-- ANIMATION MADE USING CHAT HELP-->
+
+  <script>
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const baseStagger = 120;   // ms between elements
+  const liStagger   = 90;    // ms between list items
+
+  const revealEls = Array.from(document.querySelectorAll('.reveal'));
+
+  // choreographed delays
+  revealEls.forEach((el, i) => {
+    el.style.setProperty('--delay', `${i * baseStagger}ms`);
+  });
+
+  // cascade list items (each time UL enters view)
+  document.querySelectorAll('ul.reveal').forEach(ul => {
+    ul.querySelectorAll('li').forEach((li, idx) => {
+      li.classList.add('reveal');
+      li.style.setProperty('--delay', `${(idx + 1) * liStagger}ms`);
+    });
+  });
+
+  if (!prefersReduced) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const el = entry.target;
+
+        if (entry.isIntersecting) {
+          // entering viewport: animate in
+          el.classList.add('in-view');
+
+          // if it's a UL, animate its LIs too
+          if (el.tagName === 'UL') {
+            el.querySelectorAll('li.reveal').forEach(li => li.classList.add('in-view'));
+          }
+        } else {
+          // leaving viewport: reset so it can replay next time
+          el.classList.remove('in-view');
+
+          if (el.tagName === 'UL') {
+            el.querySelectorAll('li.reveal').forEach(li => li.classList.remove('in-view'));
+          }
+        }
+      });
+    }, {
+      threshold: 0.35,
+      rootMargin: "0px 0px -10% 0px"
+    });
+
+    // Observe only top-level reveals (not the li’s; those are controlled by their UL)
+    revealEls.forEach(el => {
+      if (el.tagName !== 'LI') io.observe(el);
+    });
+
+  } else {
+    // reduced motion: always visible
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+  }
+
+
+    // ------------------------------
+  // HAPPY HOUR BACKGROUND (5–9pm Mountain Time)
+  // ------------------------------
+ // ------------------------------
+// HAPPY HOUR (5–9pm Mountain Time)
+// swaps background + hero image
+// ------------------------------
+(function () {
+  const happySrc =
+    "https://www.powder.com/.image/c_fill,w_1200,h_1200,g_xy_center,x_2520,y_1948/MjA3ODk2OTYzMTc2MjEyMjI5/gettyimages-475104837.jpg";
+
+  function getMountainHour() {
+    // returns "00".."23" reliably
+    const hh = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Denver",
+      hour: "2-digit",
+      hour12: false,
+    }).format(new Date());
+    return parseInt(hh, 10);
+  }
+
+  function updateHappyHour() {
+    try {
+      const hour = getMountainHour();
+      const isHappyHour = hour >= 17 && hour < 21;
+
+      document.body.classList.toggle("happy-hour", isHappyHour);
+
+      const img = document.getElementById("topHero");
+      if (img) {
+        // store the original once, automatically
+        if (!img.dataset.defaultSrc) img.dataset.defaultSrc = img.src;
+
+        img.src = isHappyHour ? happySrc : img.dataset.defaultSrc;
+      }
+    } catch (e) {
+      console.error("Happy hour script error:", e);
+    }
+  }
+
+  // run once after DOM is ready (extra safe)
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", updateHappyHour);
+  } else {
+    updateHappyHour();
+  }
+
+  // keep checking
+  setInterval(updateHappyHour, 30 * 1000);
+})();
+
+</script>
+
