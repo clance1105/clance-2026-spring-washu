@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zaira | Invisible Cities</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --text: #f5efe3;
+      --muted: rgba(245, 239, 227, 0.56);
+      --cream: #f1e4c8;
+      --gold: #d7b06a;
+      --gold-soft: rgba(215, 176, 106, 0.18);
+      --rose: #b66a6a;
+      --teal: #6e8d97;
+      --rust: #a05f3b;
+      --line: rgba(255,255,255,0.1);
+      --progress: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      overflow: hidden;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(215,176,106,0.06), transparent 28%),
+        radial-gradient(circle at 20% 20%, rgba(182,106,106,0.05), transparent 22%),
+        radial-gradient(circle at 80% 70%, rgba(110,141,151,0.05), transparent 24%),
+        linear-gradient(180deg, #070707 0%, #020202 100%);
+      color: var(--text);
+    }
+
+
+.page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+
+  --p0: 0;
+  --p1: 0;
+  --p2: 0;
+  --imageFade: 0;
+
+  background:
+    radial-gradient(circle at 50% 50%, rgba(215,176,106, calc(0.04 + var(--p0) * 0.22)), transparent 70%),
+    radial-gradient(circle at 18% 22%, rgba(182,106,106, calc(var(--p1) * 0.18)), transparent 70%),
+    radial-gradient(circle at 82% 24%, rgba(110,141,151, calc(var(--p2) * 0.18)), transparent 70%),
+    radial-gradient(circle at 24% 78%, rgba(160,95,59, calc(var(--p3) * 0.18)), transparent 70%),
+    radial-gradient(circle at 76% 74%, rgba(126,104,162, calc(var(--p4) * 0.16)), transparent 70%),
+    radial-gradient(circle at 52% 18%, rgba(86,113,145, calc(var(--p5) * 0.15)), transparent 70%),
+    radial-gradient(circle at 50% 10%, rgba(222,187,116, calc(var(--p6) * 0.18)), transparent 30%),
+    radial-gradient(circle at 10% 50%, rgba(241,228,200, calc(var(--p7) * 0.12)), transparent 30%),
+    linear-gradient(180deg, #070707 0%, #020202 100%);
+
+  transition: background 1.2s ease;
+}
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(circle at center, black 28%, transparent 84%);
+      opacity: calc(0.22 + var(--progress) * 0.18);
+      transition: opacity 0.8s ease;
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.68) 100%);
+    }
+
+    .back {
+      position: absolute;
+      top: 22px;
+      left: 22px;
+      z-index: 60;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(245,239,227,0.8);
+      text-decoration: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .back:hover {
+      transform: translateX(-4px);
+    }
+
+    .title-wrap {
+      position: absolute;
+      top: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(980px, calc(100vw - 120px));
+      text-align: center;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .kicker {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .title {
+      position: relative;
+      display: inline-block;
+      font-size: clamp(4.4rem, 11vw, 9rem);
+      line-height: 0.86;
+      letter-spacing: -0.07em;
+      font-weight: 700;
+      text-shadow:
+        0 0 26px rgba(215,176,106,0.08),
+        0 0 calc(8px + var(--progress) * 24px) rgba(182,106,106,0.08);
+    }
+
+    .title::after {
+      content: "ZAIRA";
+      position: absolute;
+      inset: 0;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.12);
+      transform: translate(10px, 10px);
+      filter: blur(1px);
+      opacity: 0.4;
+      z-index: -1;
+    }
+
+    .subtitle {
+      max-width: 780px;
+      margin: 14px auto 0;
+      font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+      line-height: 1.75;
+      color: rgba(245,239,227, calc(0.46 + var(--progress) * 0.20));
+      transition: color 0.8s ease;
+    }
+
+    .progress-note {
+      margin-top: 12px;
+      font-family: Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.66rem;
+      color: rgba(245,239,227,0.36);
+    }
+
+    .field {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      transform-style: preserve-3d;
+    }
+
+    .field-inner {
+      position: absolute;
+      inset: 0;
+      will-change: transform;
+      animation: fieldDrift 18s ease-in-out infinite;
+    }
+
+    @keyframes fieldDrift {
+      0%,100% { transform: translate3d(0,0,0) scale(1); }
+      25% { transform: translate3d(10px,-8px,0) scale(1.01); }
+      50% { transform: translate3d(-12px,6px,0) scale(1.015); }
+      75% { transform: translate3d(8px,10px,0) scale(1.008); }
+    }
+
+    .layer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .layer.rings { animation: ringsDrift 22s ease-in-out infinite; }
+    .layer.traces { animation: tracesDrift 16s ease-in-out infinite; }
+    .layer.words { animation: wordsDrift 20s ease-in-out infinite; }
+    .layer.quotes { animation: quotesDrift 24s ease-in-out infinite; }
+
+    @keyframes ringsDrift {
+      0%,100% { transform: translate(0,0) rotate(0deg); }
+      50% { transform: translate(12px,-10px) rotate(1deg); }
+    }
+    @keyframes tracesDrift {
+      0%,100% { transform: translate(0,0); }
+      50% { transform: translate(-14px,10px); }
+    }
+    @keyframes wordsDrift {
+      0%,100% { transform: translate(0,0); }
+      50% { transform: translate(16px,-12px); }
+    }
+    @keyframes quotesDrift {
+      0%,100% { transform: translate(0,0); }
+      50% { transform: translate(-8px,8px); }
+    }
+
+    .memory-dust {
+      position: absolute;
+      inset: 0;
+      z-index: 9;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .memory-dust span {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.42);
+      box-shadow: 0 0 8px rgba(215,176,106,0.24);
+      animation: dust linear infinite;
+      opacity: 0.22;
+    }
+
+    @keyframes dust {
+      from {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      20% { opacity: 0.32; }
+      80% { opacity: 0.16; }
+      to {
+        transform: translateY(-120px) translateX(24px);
+        opacity: 0;
+      }
+    }
+
+    .cursor-trail {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .trail-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(215,176,106,0.85), rgba(182,106,106,0.25), transparent 70%);
+      filter: blur(1px);
+      animation: trailFade 1.2s ease-out forwards;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes trailFade {
+      0% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2.6);
+      }
+    }
+
+    .ring,
+    .node,
+    .trace,
+    .measure,
+    .floating-word,
+    .quote {
+      position: absolute;
+    }
+
+    .ring {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 50%;
+      animation: pulse 12s ease-in-out infinite;
+      transition: border-color 0.6s ease, box-shadow 0.6s ease, opacity 0.6s ease;
+    }
+
+    .r1 { width: min(42vw, 540px); height: min(42vw, 540px); left: 10%; top: 26%; }
+    .r2 { width: min(22vw, 280px); height: min(22vw, 280px); left: 23%; top: 40%; animation-delay: 1.5s; }
+    .r3 { width: min(56vw, 720px); height: min(56vw, 720px); left: 5%; top: 16%; animation-delay: 2.8s; }
+    .r4 { width: min(36vw, 460px); height: min(36vw, 460px); right: 12%; top: 28%; animation-delay: 1s; }
+    .r5 { width: min(20vw, 250px); height: min(20vw, 250px); right: 18%; bottom: 12%; animation-delay: 2.2s; }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); opacity: 0.18; }
+      50% { transform: scale(1.03); opacity: 0.44; }
+    }
+
+    .node {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 18px rgba(215,176,106,0.35);
+      animation: nodeGlow 4.5s ease-in-out infinite;
+      z-index: 28;
+      cursor: pointer;
+      transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    }
+
+    .node::after {
+      content: "";
+      position: absolute;
+      inset: -9px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.06);
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .node:hover::after {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    .node.active {
+      background: var(--rose);
+      box-shadow:
+        0 0 18px rgba(182,106,106,0.45),
+        0 0 40px rgba(215,176,106,0.18);
+      transform: scale(1.22);
+    }
+
+    .n1 { top: 30%; left: 21%; }
+    .n2 { top: 42%; left: 35%; animation-delay: 0.8s; }
+    .n3 { top: 64%; left: 18%; animation-delay: 1.6s; }
+    .n4 { top: 76%; left: 37%; animation-delay: 2.1s; }
+    .n5 { top: 53%; right: 27%; animation-delay: 0.9s; }
+    .n6 { top: 34%; right: 20%; animation-delay: 1.7s; }
+    .n7 { bottom: 16%; right: 16%; animation-delay: 0.4s; }
+    .n8 { bottom: 23%; left: 47%; animation-delay: 2.8s; }
+
+    @keyframes nodeGlow {
+      0%,100% { transform: scale(1); opacity: 0.78; }
+      50% { transform: scale(1.22); opacity: 1; }
+    }
+
+    .trace {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.24), transparent);
+      transform-origin: left center;
+      opacity: 0.45;
+      animation: flicker 8s linear infinite;
+      z-index: 18;
+      transition: opacity 0.5s ease, background 0.5s ease, filter 0.5s ease;
+    }
+
+    .trace.near {
+      opacity: 0.95;
+      background: linear-gradient(90deg, transparent, rgba(215,176,106,0.6), rgba(110,141,151,0.5), transparent);
+      filter: drop-shadow(0 0 8px rgba(215,176,106,0.25));
+    }
+
+    .t1 { top: 31%; left: 22%; width: 16%; transform: rotate(24deg); }
+    .t2 { top: 43%; left: 18%; width: 18%; transform: rotate(-28deg); animation-delay: 1.2s; }
+    .t3 { top: 65%; left: 18%; width: 20%; transform: rotate(18deg); animation-delay: 2.1s; }
+    .t4 { top: 54%; left: 49%; width: 16%; transform: rotate(-22deg); animation-delay: 0.7s; }
+    .t5 { top: 35%; left: 59%; width: 11%; transform: rotate(34deg); animation-delay: 1.9s; }
+    .t6 { bottom: 18%; left: 47%; width: 21%; transform: rotate(10deg); animation-delay: 2.4s; }
+
+    @keyframes flicker {
+      0%,100% { opacity: 0.16; }
+      50% { opacity: 0.86; }
+    }
+
+    .measure {
+      font-family: Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.64rem;
+      color: rgba(244,240,232,0.34);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 6px;
+      z-index: 19;
+      white-space: nowrap;
+      transition: color 0.5s ease, border-color 0.5s ease;
+    }
+
+    .measure.near {
+      color: rgba(241,228,200,0.9);
+      border-color: rgba(215,176,106,0.35);
+    }
+
+    .m1 { top: 25%; left: 42%; width: 120px; }
+    .m2 { top: 66%; left: 42%; width: 135px; }
+    .m3 { top: 46%; right: 10%; width: 110px; }
+    .m4 { bottom: 12%; left: 30%; width: 150px; }
+
+    .quote {
+      max-width: min(22vw, 290px);
+      padding: 14px 16px;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.24);
+      backdrop-filter: blur(8px);
+      z-index: 24;
+      opacity: 0.78;
+      transition: transform 0.45s ease, opacity 0.45s ease, border-color 0.45s ease;
+    }
+
+    .quote.near {
+      opacity: 1;
+      transform: translateY(-6px);
+      border-color: rgba(215,176,106,0.3);
+    }
+
+    .q1 { top: 24%; right: 5%; }
+    .q2 { bottom: 8%; left: 6%; max-width: min(26vw, 330px); }
+    .q3 { bottom: 10%; right: 10%; }
+
+    .floating-word {
+      font-family: Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(244,240,232,0.18);
+      white-space: nowrap;
+      user-select: none;
+      pointer-events: none;
+      z-index: 22;
+      animation: driftWord ease-in-out infinite;
+      transition: transform 0.45s ease, color 0.45s ease, opacity 0.45s ease;
+    }
+
+    .floating-word.near {
+      color: rgba(215,176,106,0.92);
+      opacity: 1;
+      text-shadow:
+        0 0 16px rgba(215,176,106,0.22),
+        0 0 34px rgba(182,106,106,0.16);
+    }
+
+    .w1  { top: 20%; left: 9%; font-size: 0.92rem; animation-duration: 12s; }
+    .w2  { top: 26%; right: 14%; font-size: 1rem; animation-duration: 15s; }
+    .w3  { top: 45%; left: 7%; font-size: 0.8rem; animation-duration: 14s; }
+    .w4  { top: 54%; right: 6%; font-size: 0.88rem; animation-duration: 13s; }
+    .w5  { bottom: 16%; left: 15%; font-size: 0.96rem; animation-duration: 16s; }
+    .w6  { bottom: 22%; right: 20%; font-size: 0.82rem; animation-duration: 12.5s; }
+    .w7  { top: 70%; left: 42%; font-size: 0.76rem; animation-duration: 13.5s; }
+    .w8  { top: 37%; left: 46%; font-size: 1.05rem; animation-duration: 17s; }
+    .w9  { bottom: 10%; left: 45%; font-size: 0.86rem; animation-duration: 11.5s; }
+    .w10 { top: 14%; left: 60%; font-size: 0.72rem; animation-duration: 18s; }
+    .w11 { top: 58%; left: 28%; font-size: 0.78rem; animation-duration: 14.8s; }
+    .w12 { top: 32%; right: 29%; font-size: 0.84rem; animation-duration: 16.2s; }
+
+    @keyframes driftWord {
+      0%,100% { transform: translateY(0) translateX(0); opacity: 0.14; }
+      50% { transform: translateY(-12px) translateX(8px); opacity: 0.32; }
+    }
+
+    .memory-popup {
+      position: absolute;
+      min-width: 220px;
+      max-width: 280px;
+      padding: 14px 16px;
+      background: rgba(8,8,8,0.78);
+      border: 1px solid rgba(215,176,106,0.28);
+      color: var(--cream);
+      backdrop-filter: blur(10px);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      z-index: 55;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.94);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      box-shadow:
+        0 0 30px rgba(215,176,106,0.12),
+        0 0 60px rgba(182,106,106,0.08);
+    }
+
+    .memory-popup.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .memory-popup strong {
+      display: block;
+      font-family: Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.64rem;
+      color: rgba(241,228,200,0.62);
+      margin-bottom: 8px;
+    }
+
+    .ripple {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(215,176,106,0.45);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 21;
+      animation: ripple 1.4s ease-out forwards;
+    }
+
+    @keyframes ripple {
+      0% {
+        opacity: 0.75;
+        width: 20px;
+        height: 20px;
+      }
+      100% {
+        opacity: 0;
+        width: 180px;
+        height: 180px;
+      }
+    }
+
+    .center-caption {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      z-index: 52;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(244,240,232,0.44);
+      pointer-events: none;
+    }
+
+    @media (max-width: 1100px) {
+      .title-wrap {
+        width: calc(100vw - 70px);
+      }
+
+      .quote {
+        display: none;
+      }
+
+      .w2, .w4, .w6, .w10, .w12 {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .title-wrap {
+        top: 56px;
+        width: calc(100vw - 40px);
+      }
+
+      .title {
+        font-size: 4rem;
+      }
+
+      .subtitle {
+        font-size: 0.95rem;
+      }
+
+      .center-caption {
+        display: none;
+      }
+
+      .w8, .w11 {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" id="page">
+    <a class="back" href="map.html">← back to map</a>
+
+    <div class="title-wrap">
+      <div class="kicker">Invisible Cities / City of Memory</div>
+      <h1 class="title">ZAIRA</h1>
+      <p class="subtitle">
+        The city is reconstructed through distances, scars, returns, processions, and traces.
+        Move through the field and let its memory surface.
+      </p>
+      <div class="progress-note" id="progressNote">0 memories activated</div>
+    </div>
+
+    <div class="memory-dust" aria-hidden="true"></div>
+    <div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
+    <div class="memory-popup" id="memoryPopup"></div>
+
+    <section class="field" id="field">
+      <div class="field-inner" id="fieldInner">
+        <div class="layer rings">
+          <div class="ring r1"></div>
+          <div class="ring r2"></div>
+          <div class="ring r3"></div>
+          <div class="ring r4"></div>
+          <div class="ring r5"></div>
+        </div>
+
+        <div class="layer traces">
+          <div class="trace t1 reactive"></div>
+          <div class="trace t2 reactive"></div>
+          <div class="trace t3 reactive"></div>
+          <div class="trace t4 reactive"></div>
+          <div class="trace t5 reactive"></div>
+          <div class="trace t6 reactive"></div>
+
+          <div class="measure m2 reactive">distance retained</div>
+          <div class="measure m3 reactive">event as residue</div>
+          <div class="measure m4 reactive">alignment remembered</div>
+        </div>
+
+        <div class="layer nodes">
+          <div class="node n1 memory-node" data-memory="A stair remembers the weight of everyone who climbed it."></div>
+          <div class="node n2 memory-node" data-memory="An interval between windows keeps the rhythm of a vanished procession."></div>
+          <div class="node n3 memory-node" data-memory="A corner preserves the turn of a body long after the body is gone."></div>
+          <div class="node n4 memory-node" data-memory="The city survives in the repeated return to the same route."></div>
+          <div class="node n5 memory-node" data-memory="A wall keeps impact as quietly as skin keeps scars."></div>
+          <div class="node n6 memory-node" data-memory="What is remembered is not the object, but the relation it held."></div>
+          <div class="node n7 memory-node" data-memory="Distances in Zaira are never empty; they are filled with prior events."></div>
+          <div class="node n8 memory-node" data-memory="The visible city is only the surface of accumulated memory."></div>
+        </div>
+
+        <div class="layer words">
+          <div class="floating-word w1 reactive">memories</div>
+          <div class="floating-word w2 reactive">distances</div>
+          <div class="floating-word w3 reactive">traces</div>
+          <div class="floating-word w4 reactive">returns</div>
+          <div class="floating-word w5 reactive">alignments</div>
+          <div class="floating-word w6 reactive">residue</div>
+          <div class="floating-word w7 reactive">events</div>
+          <div class="floating-word w8 reactive">repetition</div>
+          <div class="floating-word w9 reactive">intervals</div>
+          <div class="floating-word w10 reactive">marks</div>
+          <div class="floating-word w11 reactive">routes</div>
+          <div class="floating-word w12 reactive">echoes</div>
+        </div>
+
+        <div class="layer quotes">
+          <div class="quote q1 reactive">The city does not tell its past directly. It carries it in relation.</div>
+          <div class="quote q2 reactive">Its memory survives in marks and scars.</div>
+          <div class="quote q3 reactive">What is visible is only the surface of what remains.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="center-caption">Move, hover, and awaken the city</div>
+
+    
+  </main>
+
+
+
+<script>
+  const page = document.getElementById("page");
+  const field = document.getElementById("field");
+  const fieldInner = document.getElementById("fieldInner");
+  const dust = document.querySelector(".memory-dust");
+  const trail = document.getElementById("cursorTrail");
+  const popup = document.getElementById("memoryPopup");
+  const nodes = document.querySelectorAll(".memory-node");
+  const reactiveEls = document.querySelectorAll(".reactive");
+  const progressNote = document.getElementById("progressNote");
+
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let activated = new Set();
+  let moveTick = 0;
+  let activeNode = null;
+
+  for (let i = 0; i < 34; i++) {
+    const dot = document.createElement("span");
+    dot.style.left = Math.random() * 100 + "vw";
+    dot.style.top = 25 + Math.random() * 75 + "vh";
+    dot.style.animationDuration = 8 + Math.random() * 10 + "s";
+    dot.style.animationDelay = Math.random() * 8 + "s";
+    dot.style.opacity = 0.12 + Math.random() * 0.22;
+    dust.appendChild(dot);
+  }
+
+  function updateProgress() {
+  const count = activated.size;
+  const progress = count / nodes.length;
+
+  page.style.setProperty("--progress", progress.toFixed(2));
+  progressNote.textContent = `${count} memor${count === 1 ? "y" : "ies"} activated`;
+
+  const steps = [
+    count >= 1 ? 1 : 0, // gold
+    count >= 2 ? 1 : 0, // rose
+    count >= 3 ? 1 : 0, // teal
+    count >= 4 ? 1 : 0, // rust
+    count >= 5 ? 1 : 0, // violet
+    count >= 6 ? 1 : 0, // blue-gray
+    count >= 7 ? 1 : 0, // amber
+    count >= 8 ? 1 : 0  // ivory wash
+  ];
+
+  steps.forEach((value, i) => {
+    page.style.setProperty(`--p${i}`, value);
+  });
+}
+
+  function makeRipple(x, y) {
+    const ripple = document.createElement("div");
+    ripple.className = "ripple";
+    ripple.style.left = x + "px";
+    ripple.style.top = y + "px";
+    page.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 1400);
+  }
+
+  function showPopupForNode(node) {
+    const rect = node.getBoundingClientRect();
+
+    const popupX = rect.left + rect.width / 2 + 120;
+    const popupY = rect.top + rect.height / 2 - 50;
+
+    popup.innerHTML = `<strong>memory fragment</strong>${node.dataset.memory}`;
+    popup.style.left = `${popupX}px`;
+    popup.style.top = `${popupY}px`;
+    popup.classList.add("show");
+  }
+
+  function hidePopup() {
+    popup.classList.remove("show");
+    activeNode = null;
+  }
+
+  function spawnTrail(x, y) {
+    const dot = document.createElement("div");
+    dot.className = "trail-dot";
+    dot.style.left = x + "px";
+    dot.style.top = y + "px";
+    trail.appendChild(dot);
+    setTimeout(() => dot.remove(), 1200);
+  }
+
+  function activateNode(node) {
+    if (!activated.has(node)) {
+      activated.add(node);
+      node.classList.add("active");
+      updateProgress();
+    }
+  }
+
+  document.addEventListener("mousemove", (e) => {
+    const xNorm = (e.clientX / window.innerWidth - 0.5);
+    const yNorm = (e.clientY / window.innerHeight - 0.5);
+    targetX = xNorm * 20;
+    targetY = yNorm * 20;
+
+    moveTick++;
+    if (moveTick % 2 === 0) {
+      spawnTrail(e.clientX, e.clientY);
+    }
+
+    reactiveEls.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist < 180) {
+        el.classList.add("near");
+        const strength = (180 - dist) / 180;
+        const shiftX = dx * -0.025 * strength;
+        const shiftY = dy * -0.025 * strength;
+        el.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
+      } else {
+        el.classList.remove("near");
+        el.style.transform = "";
+      }
+    });
+  });
+
+  function animateField() {
+    currentX += (targetX - currentX) * 0.045;
+    currentY += (targetY - currentY) * 0.045;
+
+    field.style.transform =
+      `perspective(1400px) rotateX(${-currentY * 0.18}deg) rotateY(${currentX * 0.18}deg)`;
+
+    fieldInner.style.transform =
+      `translate(${currentX * 1.1}px, ${currentY * 1.1}px) scale(${1.01 + Math.abs(currentX) * 0.00012})`;
+
+    requestAnimationFrame(animateField);
+  }
+  animateField();
+
+  nodes.forEach((node) => {
+    node.addEventListener("mouseenter", () => {
+      if (activeNode === node) return;
+
+      activeNode = node;
+      activateNode(node);
+      showPopupForNode(node);
+
+      const rect = node.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      makeRipple(x, y);
+    });
+
+    node.addEventListener("mouseleave", () => {
+      if (activeNode === node) {
+        hidePopup();
+      }
+    });
+
+    node.addEventListener("click", () => {
+      activateNode(node);
+      showPopupForNode(node);
+
+      const rect = node.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      makeRipple(x, y);
+    });
+  });
+
+  updateProgress();
+
+</script>
+
+</body>
+</html>
+
