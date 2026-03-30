@@ -141,7 +141,7 @@ body {
   background:
     radial-gradient(circle at 50% 50%, rgba(255, 210, 120, 0.05), transparent 60%);
   box-shadow:
-    0 0 30px rgba(211, 123, 0, 0.664),
+    0 0 30px rgba(0, 0, 0, 0.664),
     0 0 70px rgba(255, 190, 100, 0.04),
     inset 0 0 0 1px rgba(255, 220, 150, 0.04);
 }
