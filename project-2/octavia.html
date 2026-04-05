@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Octavia | Invisible Cities</title>
+  <style>
+    :root {
+      --sky-top: #eef3f7;
+      --sky-mid: #b4c3cf;
+      --sky-low: #607284;
+      --void-top: #1f2a33;
+      --void-bottom: #070c11;
+      --text-dark: #18212a;
+      --text-light: #eef4f8;
+      --muted: rgba(255,255,255,0.62);
+      --rope: rgba(255,255,255,0.98);
+      --rope-cut: rgba(255,210,210,0.85);
+      --card-edge: rgba(255,255,255,0.86);
+      --shadow: rgba(8, 14, 20, 0.22);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; min-height: 100%; }
+
+    body {
+      overflow-x: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 26%, var(--sky-low) 49%, var(--void-top) 72%, var(--void-bottom) 100%);
+      color: var(--text-light);
+    }
+
+    .site { position: relative; min-height: 100vh; overflow: hidden; isolation: isolate; }
+    .site::before {
+      content: "";
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(circle at 50% 8%, rgba(255,255,255,0.42), transparent 20%), linear-gradient(180deg, rgba(255,255,255,0.12), transparent 28%);
+      z-index: 0;
+    }
+
+    .back {
+      position: fixed; top: 22px; left: 22px; z-index: 120;
+      text-decoration: none; color: rgba(0, 0, 0, 0.84);
+      text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.72rem;
+      transition: transform 0.24s ease, opacity 0.24s ease;
+    }
+    .back:hover { transform: translateX(-4px); opacity: 1; }
+
+    .hero { position: relative; min-height: 1320px; z-index: 2; }
+    .hero-top {
+      position: relative; width: min(1120px, calc(100vw - 80px)); margin: 0 auto;
+      padding-top: 42px; text-align: center; z-index: 30; color: var(--text-dark);
+    }
+
+    .kicker { text-transform: uppercase; letter-spacing: 0.22em; font-size: 0.72rem; opacity: 0.72; margin-bottom: 10px; }
+    .title {
+      font-family: Georgia, "Times New Roman", serif; font-size: clamp(4.8rem, 11vw, 9.4rem);
+      line-height: 0.86; letter-spacing: -0.07em; font-weight: 700; color: #fbfdff;
+      text-shadow: 0 12px 28px rgba(14, 24, 32, 0.12), 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .subtitle {
+      max-width: 820px; margin: 16px auto 0; font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+      line-height: 1.85; color: rgba(19, 31, 43, 0.72);
+    }
+    .instruction { margin-top: 18px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.18em; color: rgba(255,255,255,0.56); }
+
+.field { position: relative; width: 100%; height: 1320px; margin-top: 24px; z-index: 10; }
+    #ropeCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 14;
+  pointer-events: auto;
+}
+    .anchors { position: absolute; inset: 0; pointer-events: none; z-index: 12; }
+
+    .anchor {
+      position: absolute; width: 12px; height: 12px; border-radius: 50%;
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 0 0 6px rgba(255,255,255,0.08), 0 0 20px rgba(255,255,255,0.24);
+    }
+
+    .a1 { left: 15%; top: 76px; }
+    .a2 { left: 35%; top: 112px; }
+    .a3 { left: 54%; top: 70px; }
+    .a4 { left: 76%; top: 98px; }
+    .a5 { left: 26%; top: 230px; }
+    .a6 { left: 67%; top: 246px; }
+    .a7 { left: 18%; top: 425px; }
+    .a8 { left: 48%; top: 452px; }
+    .a9 { left: 79%; top: 438px; }
+   .a10 { left: 12%; top: 300px; }
+    .a11 { left: 42%; top: 288px; }
+    .a12 { left: 58%; top: 590px; }
+    .a13 { left: 86%; top: 610px; }
+
+    .cards-layer { position: absolute; inset: 0; z-index: 20; }
+    .suspended-card {
+      --w: 340px;
+      position: absolute; left: 0; top: 0;
+      width: min(var(--w), calc(100vw - 44px));
+      transform-origin: 50% 50%; will-change: transform, opacity;
+    }
+
+    .suspended-card .card-box {
+      position: relative; z-index: 3; width: 100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(236,242,247,0.9));
+      color: var(--text-dark); border: 1px solid var(--card-edge);
+      box-shadow: 0 28px 70px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.76);
+      backdrop-filter: blur(12px); padding: 18px 20px;
+    }
+    .suspended-card:hover .card-box { box-shadow: 0 32px 84px rgba(8,14,20,0.28), inset 0 1px 0 rgba(255,255,255,0.76); }
+    .suspended-card small { display: block; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.66rem; color: rgba(24,33,42,0.56); margin-bottom: 10px; }
+    .suspended-card h2, .suspended-card h3 {
+      font-family: Georgia, "Times New Roman", serif; letter-spacing: -0.03em; font-weight: 600; color: #18212a; margin-bottom: 10px;
+    }
+    .suspended-card h2 { font-size: clamp(1.5rem, 2.1vw, 2.15rem); line-height: 1.05; }
+    .suspended-card h3 { font-size: 1.1rem; }
+    .suspended-card p, .suspended-card li { line-height: 1.78; font-size: 0.96rem; color: rgba(24,33,42,0.8); }
+    .suspended-card ul { list-style: none; display: grid; gap: 8px; }
+    .suspended-card li { padding-left: 12px; position: relative; }
+    .suspended-card li::before {
+      content: ""; position: absolute; left: 0; top: 0.72em; width: 5px; height: 1px; background: rgba(24,33,42,0.42);
+    }
+
+    .rope-line {
+      stroke: var(--rope); stroke-width: 2.35; fill: none; stroke-linecap: round;
+      filter: drop-shadow(0 0 4px rgba(255,255,255,0.25));
+    }
+    .rope-line.cut { opacity: 0.16; stroke: var(--rope-cut); stroke-dasharray: 7 8; }
+  .rope-hit {
+  stroke: transparent;
+  stroke-width: 40;
+  fill: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+    .rope-node {
+      position: absolute; width: 11px; height: 11px; margin-left: -5.5px; margin-top: -5.5px;
+      border-radius: 50%; background: rgba(255,255,255,0.98); box-shadow: 0 0 0 4px rgba(255,255,255,0.08);
+      z-index: 22; pointer-events: none;
+    }
+
+    .void-labels { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+    .void-word { position: absolute; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.72rem; color: rgba(255,255,255,0.26); animation: drift 12s ease-in-out infinite; }
+    .v1 { left: 10%; top: 70%; animation-delay: 0.4s; }
+    .v2 { right: 13%; top: 61%; animation-delay: 1.1s; }
+    .v3 { left: 46%; top: 77%; animation-delay: 1.8s; }
+    .v4 { left: 24%; top: 90%; animation-delay: 2.2s; }
+    .v5 { right: 28%; top: 88%; animation-delay: 0.9s; }
+    @keyframes drift { 0%, 100% { transform: translateY(0px); opacity: 0.18; } 50% { transform: translateY(-8px); opacity: 0.42; } }
+
+    .scroll-note { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 30; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.68rem; color: rgba(255,255,255,0.52); pointer-events: none; }
+
+    .suspended-text {
+      position: relative; padding: 170px 24px 210px;
+      background: linear-gradient(to bottom, rgba(7,12,17,0) 0%, rgba(7,12,17,0.66) 14%, #070c11 36%, #070c11 100%);
+      z-index: 3;
+    }
+    .text-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 2; }
+    .text-inner h2 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.8rem, 4vw, 4.4rem); letter-spacing: -0.05em; line-height: 0.96; margin-bottom: 28px; }
+    .lead { color: rgba(238,244,248,0.68); line-height: 1.92; margin-bottom: 42px; font-size: 1.03rem; }
+    .octavia-text-content > * { opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s ease; }
+    .octavia-text-content > *.in-view { opacity: 1; transform: translateY(0); }
+    .octavia-text-content p { font-size: 1.05rem; line-height: 1.98; color: rgba(238,244,248,0.76); margin-bottom: 30px; }
+    .octavia-text-content blockquote { margin: 18px 0 34px; padding-left: 20px; border-left: 1px solid rgba(255,255,255,0.22); color: rgba(238,244,248,0.64); line-height: 1.9; font-style: italic; }
+
+ @media (max-width: 1100px) {
+  .hero { min-height: 1780px; }
+  .field { height: 1480px; }
+}
+@media (max-width: 760px) {
+  .hero { min-height: 2500px; }
+  .field { height: 2220px; }
+}
+
+    .field {
+  cursor: crosshair;
+  touch-action: none;
+}
+  </style>
+</head>
+<body>
+  <div class="site">
+    <a class="back" href="map.html">← back to map</a>
+
+    <section class="hero">
+      <div class="hero-top">
+        <div class="kicker">Invisible Cities / Suspended Cities</div>
+        <h1 class="title">OCTAVIA</h1>
+        <p class="subtitle">
+          Octavia is stretched above the void. It survives not through solidity, but through tension,
+          balance, and the fragile trust that what is suspended will continue to hold. Here, the city
+          is never simply built. It is maintained. Every room, path, and threshold remains visible as
+          something supported rather than guaranteed.
+        </p>
+        <div class="instruction">drag across the ropes</div>
+      </div>
+
+      <div class="field" id="field">
+        <div class="anchors">
+          <div class="anchor a1"></div>
+          <div class="anchor a2"></div>
+          <div class="anchor a3"></div>
+          <div class="anchor a4"></div>
+          <div class="anchor a5"></div>
+          <div class="anchor a6"></div>
+          <div class="anchor a7"></div>
+          <div class="anchor a8"></div>
+          <div class="anchor a9"></div>
+          <div class="anchor a10"></div>
+          <div class="anchor a11"></div>
+          <div class="anchor a12"></div>
+          <div class="anchor a13"></div>
+        </div>
+
+        <svg id="ropeCanvas"></svg>
+
+        <div class="cards-layer" id="cardsLayer">
+          <article class="suspended-card" id="card1" data-left-anchor="a1" data-right-anchor="a2" data-width="430" data-left-x="72" data-right-x="318">
+            <div class="card-box">
+              <small>01 / suspended condition</small>
+              <h2>Everything in Octavia depends on what cannot be fully seen.</h2>
+              <p>
+                The city hangs over emptiness, held by cords, walkways, knots, and narrow passages.
+                Its beauty comes not from permanence, but from the delicacy of tension.
+              </p>
+            </div>
+          </article>
+
+          <article class="suspended-card" id="card2" data-left-anchor="a3" data-right-anchor="a4" data-width="300" data-left-x="52" data-right-x="238">
+            <div class="card-box">
+              <small>02 / interface logic</small>
+              <h3>Read vertically</h3>
+              <ul>
+                <li>anchors above</li>
+                <li>boxes suspended</li>
+                <li>void below</li>
+                <li>structure as atmosphere</li>
+              </ul>
+            </div>
+          </article>
+
+  
+
+          <article class="suspended-card" id="card4" data-left-anchor="a7" data-right-anchor="a8" data-width="310" data-left-x="56" data-right-x="248">
+            <div class="card-box">
+              <small>04 / balance</small>
+              <p>
+                One rope can keep a room from falling, but only barely. A city like this survives by
+                distributing trust across many lines.
+              </p>
+            </div>
+          </article>
+
+          <article class="suspended-card" id="card5" data-left-anchor="a8" data-right-anchor="a9" data-width="360" data-left-x="72" data-right-x="286">
+            <div class="card-box">
+              <small>05 / theme</small>
+              <p>
+                This page treats Octavia as a hanging system. The text boxes are not placed on the page
+                like blocks on ground; they are carried by visible supports and react when those supports fail.
+              </p>
+            </div>
+          </article>
+          <article class="suspended-card" id="card6" data-left-anchor="a5" data-right-anchor="a11" data-width="340" data-left-x="62" data-right-x="274">
+  <div class="card-box">
+    <small>06 / habitation</small>
+    <h3>Life in Octavia is organized around dependence.</h3>
+    <p>
+      Nothing here feels isolated. A dwelling, a platform, or a crossing only exists because it is held
+      by something beyond itself. To live in Octavia is to remain aware that structure is always shared.
+    </p>
+  </div>
+</article>
+
+<article class="suspended-card" id="card7" data-left-anchor="a11" data-right-anchor="a6" data-width="320" data-left-x="58" data-right-x="252">
+  <div class="card-box">
+    <small>07 / perception</small>
+    <p>
+      In Octavia, gravity is never forgotten. Every movement across the city carries an awareness of drop,
+      pull, and suspension, so even ordinary passage becomes charged with attention.
+    </p>
+  </div>
+</article>
+
+<article class="suspended-card" id="card8" data-left-anchor="a12" data-right-anchor="a13" data-width="390" data-left-x="72" data-right-x="308">
+  <div class="card-box">
+    <small>08 / city image</small>
+    <h3>The city appears as a web before it appears as a mass.</h3>
+    <p>
+      What gives Octavia its form is not heavy enclosure but the visible pattern of relations: lines,
+      ties, spans, and supports stretched over emptiness. Its image is one of coherence under tension.
+    </p>
+  </div>
+</article>
+
+<article class="suspended-card" id="card9" data-left-anchor="a8" data-right-anchor="a12" data-width="300" data-left-x="56" data-right-x="238">
+  <div class="card-box">
+    <small>09 / reading the city</small>
+    <ul>
+      <li>support is visible</li>
+      <li>void is active</li>
+      <li>crossings are precious</li>
+      <li>balance becomes architecture</li>
+    </ul>
+  </div>
+</article>
+
+        </div>
+
+        <div class="void-labels">
+          <div class="void-word v1">tension</div>
+          <div class="void-word v2">balance</div>
+          <div class="void-word v3">suspension</div>
+          <div class="void-word v4">crossing</div>
+          <div class="void-word v5">void</div>
+        </div>
+
+        <div class="scroll-note">descend into the suspended archive</div>
+      </div>
+    </section>
+
+    <section class="suspended-text">
+      <div class="text-inner">
+        <h2>Octavia is strongest where it appears most fragile.</h2>
+
+        <p class="lead">
+          In Octavia, architecture does not overcome emptiness. It accepts it, spans it, and lives within
+          its pressure. Because the city is suspended rather than planted, every structure is defined not only
+          by its form but by the lines that keep it from disappearing into the abyss below.
+        </p>
+
+        <div class="octavia-text-content" id="octaviaTextContent">
+          <p>
+            To imagine Octavia is to imagine habitation without certainty. Rooms do not rest on a reliable
+            ground. They are tied, stretched, and fastened into place. Movement through the city therefore
+            becomes an ongoing awareness of support. One does not simply enter a house or cross a path; one
+            participates in a network of held tensions.
+          </p>
+
+          <p>
+            That condition alters perception. In an ordinary city, structure can disappear behind surface.
+            Floors feel given, walls feel fixed, and support becomes invisible because it is trusted. In
+            Octavia the opposite is true. Support cannot vanish from thought. The rope, knot, cable, beam,
+            and bridge remain part of the city’s appearance because they are part of its reality.
+          </p>
+
+          <p>
+            This webpage follows that logic by making the supports explicit. The text boxes do not sit on
+            an implied ground plane. They hang in space. The lines above them are not decorative accents but
+            visible conditions of survival. When they are cut, the boxes swing or fall, and the page briefly
+            behaves less like a layout and more like a precarious structure.
+          </p>
+
+          <blockquote>
+            Octavia is not defined by what stands beneath it, but by what keeps it from falling.
+          </blockquote>
+
+          <p>
+            The void is therefore not background. It is active. It gives every platform urgency, every
+            crossing meaning, and every suspension its beauty. Without the abyss, the ropes would become
+            ornamental and the city would lose the very condition that makes it legible.
+          </p>
+
+          <p>
+            Unlike Zaira, which accumulates meaning through memory and traces, Octavia gathers meaning through
+            balance. Its poetry lies in precision under pressure. What matters is not permanence in the sense
+            of weight and mass, but endurance through relation. The city survives because enough connections
+            remain intact, taut, and mutually dependent.
+          </p>
+
+          <p>
+            For that reason Octavia feels delicate without feeling weak. Its rigor comes from the fact that
+            each element matters. A suspended city cannot afford indifference. Each line, fastening, and joint
+            contributes to the coherence of the whole. Fragility here is not failure. It is a heightened form
+            of order.
+          </p>
+
+          <p>
+            The aim of the page is to make that condition spatial. It should feel light, tensile, and lucid,
+            as though every element is briefly hovering over loss. The viewer is asked to read not only the
+            boxes themselves, but the systems between them: the distances, the hanging lines, the pull of
+            gravity, and the unstable grace of a city that remains aloft.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  
+ <script>
+  const field = document.getElementById("field");
+  const ropeCanvas = document.getElementById("ropeCanvas");
+  const octaviaTextContent = document.getElementById("octaviaTextContent");
+
+const desktopConfigs = [
+  { id: "card1", y: 170 },
+  { id: "card2", y: 190 },
+  { id: "card6", y: 360 },
+  { id: "card7", y: 420 },
+  { id: "card4", y: 650 },
+  { id: "card5", y: 630 },
+  { id: "card9", y: 930 },
+  { id: "card8", y: 840 }
+];
+const mobileConfigs = [
+  { id: "card1", y: 190 },
+  { id: "card2", y: 430 },
+  { id: "card6", y: 700 },
+  { id: "card7", y: 980 },
+  { id: "card4", y: 1260 },
+  { id: "card5", y: 1510 },
+  { id: "card8", y: 1810 },
+  { id: "card9", y: 2110 }
+];
+
+  const settings = {
+    gravity: 2200,
+    pendulumDamping: 1.1,
+    freefallLinearDamping: 0.996,
+    freefallAngularDamping: 0.997,
+    maxDt: 1 / 60,
+    fadeDistance: 240,
+    cutAngularImpulse: 4.2,
+    cutLinearImpulse: 520,
+    ropeSegments: 12,
+    ropeIterations: 18,
+    ropePointDamping: 0.985,
+    ropeGravity: 560,
+    ropeFollow: 0.16,
+    ropeSlack: 1.018,
+    intactSpring: 14,
+    intactAngleSpring: 18,
+    intactDamping: 0.9,
+    intactAngleDamping: 1.4,
+    windForce: 22,
+    windTorque: 0.24
+  };
+
+  const cards = [];
+  let lastTime = 0;
+  let slicing = false;
+  let lastPointer = null;
+  let slashFlash = null;
+
+  function rotatePoint(localX, localY, angle) {
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+    return { x: localX * c - localY * s, y: localX * s + localY * c };
+  }
+
+  function getConfigFor(cardId) {
+    const configs = window.innerWidth <= 760 ? mobileConfigs : desktopConfigs;
+    return configs.find((item) => item.id === cardId);
+  }
+
+  function getAnchorPos(name) {
+    const el = document.querySelector(`.${name}`);
+    const fieldRect = field.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    return {
+      x: rect.left - fieldRect.left + rect.width / 2,
+      y: rect.top - fieldRect.top + rect.height / 2
+    };
+  }
+
+  function setCanvasSize() {
+    ropeCanvas.setAttribute("viewBox", `0 0 ${field.offsetWidth} ${field.offsetHeight}`);
+    ropeCanvas.setAttribute("width", field.offsetWidth);
+    ropeCanvas.setAttribute("height", field.offsetHeight);
+  }
+
+  function makeSvgPath(cls) {
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("class", cls);
+    return path;
+  }
+
+  function syncCardElement(card) {
+    card.el.style.left = `${card.cx - card.width / 2}px`;
+    card.el.style.top = `${card.cy - card.height / 2}px`;
+    card.el.style.transform = `rotate(${card.angle}rad)`;
+  }
+
+  function getWorldAttach(card, side) {
+    const local = side === "left" ? card.localLeft : card.localRight;
+    const rotated = rotatePoint(local.x, local.y, card.angle);
+    return {
+      x: card.cx + rotated.x,
+      y: card.cy + rotated.y
+    };
+  }
+
+  function createRope(anchor, attach, slackMultiplier = settings.ropeSlack) {
+    const dx = attach.x - anchor.x;
+    const dy = attach.y - anchor.y;
+    const straightLength = Math.hypot(dx, dy);
+    const totalLength = Math.max(straightLength * slackMultiplier, straightLength + 2);
+    const segmentLength = totalLength / settings.ropeSegments;
+    const normalX = straightLength > 0 ? -dy / straightLength : 0;
+    const normalY = straightLength > 0 ? dx / straightLength : 1;
+
+    const points = [];
+    for (let i = 0; i <= settings.ropeSegments; i++) {
+      const t = i / settings.ropeSegments;
+      const sag = Math.sin(Math.PI * t) * 6;
+      const x = anchor.x + dx * t + normalX * sag;
+      const y = anchor.y + dy * t + normalY * sag;
+      points.push({ x, y, oldx: x, oldy: y });
+    }
+
+    return {
+      segmentLength,
+      points,
+      anchor: { ...anchor },
+      attach: { ...attach }
+    };
+  }
+
+  function resetRopeToLine(rope, anchor, attach) {
+    rope.anchor = { ...anchor };
+    rope.attach = { ...attach };
+
+    const dx = attach.x - anchor.x;
+    const dy = attach.y - anchor.y;
+    const straightLength = Math.hypot(dx, dy);
+    rope.segmentLength = Math.max(
+      (straightLength * settings.ropeSlack) / settings.ropeSegments,
+      straightLength / settings.ropeSegments + 0.25
+    );
+
+    const normalX = straightLength > 0 ? -dy / straightLength : 0;
+    const normalY = straightLength > 0 ? dx / straightLength : 1;
+
+    rope.points.forEach((p, i) => {
+      const t = i / settings.ropeSegments;
+      const sag = Math.sin(Math.PI * t) * 5;
+      p.x = anchor.x + dx * t + normalX * sag;
+      p.y = anchor.y + dy * t + normalY * sag;
+      p.oldx = p.x;
+      p.oldy = p.y;
+    });
+  }
+
+  function updatePoseFromPivot(card) {
+    const local = card.pivotSide === "left" ? card.localLeft : card.localRight;
+    const ropeX = Math.cos(card.ropeAngle) * card.ropeLength;
+    const ropeY = Math.sin(card.ropeAngle) * card.ropeLength;
+    const pivotX = card.pivotAnchor.x + ropeX;
+    const pivotY = card.pivotAnchor.y + ropeY;
+
+    card.angle = card.ropeAngle - card.pivotLocalAngle;
+    const rotated = rotatePoint(local.x, local.y, card.angle);
+    card.cx = pivotX - rotated.x;
+    card.cy = pivotY - rotated.y;
+  }
+
+  function updateRopeTargets(card) {
+    card.leftAnchor = getAnchorPos(card.el.dataset.leftAnchor);
+    card.rightAnchor = getAnchorPos(card.el.dataset.rightAnchor);
+
+    const leftAttach = getWorldAttach(card, "left");
+    const rightAttach = getWorldAttach(card, "right");
+
+    if (card.leftRope) {
+      card.leftRope.anchor = { ...card.leftAnchor };
+      card.leftRope.attach = { ...leftAttach };
+    }
+    if (card.rightRope) {
+      card.rightRope.anchor = { ...card.rightAnchor };
+      card.rightRope.attach = { ...rightAttach };
+    }
+  }
+
+  function simulateRope(rope, dt) {
+    const points = rope.points;
+    if (!points || points.length < 2) return;
+
+    for (let i = 1; i < points.length - 1; i++) {
+      const p = points[i];
+      const vx = (p.x - p.oldx) * settings.ropePointDamping;
+      const vy = (p.y - p.oldy) * settings.ropePointDamping;
+      p.oldx = p.x;
+      p.oldy = p.y;
+      p.x += vx;
+      p.y += vy + settings.ropeGravity * dt * dt;
+    }
+
+    for (let iter = 0; iter < settings.ropeIterations; iter++) {
+      points[0].x = rope.anchor.x;
+      points[0].y = rope.anchor.y;
+      points[0].oldx = rope.anchor.x;
+      points[0].oldy = rope.anchor.y;
+
+      const last = points.length - 1;
+      points[last].x += (rope.attach.x - points[last].x) * settings.ropeFollow;
+      points[last].y += (rope.attach.y - points[last].y) * settings.ropeFollow;
+
+      for (let i = 0; i < points.length - 1; i++) {
+        const p1 = points[i];
+        const p2 = points[i + 1];
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const dist = Math.hypot(dx, dy) || 0.0001;
+        const diff = (dist - rope.segmentLength) / dist;
+
+        if (i === 0) {
+          p2.x -= dx * diff;
+          p2.y -= dy * diff;
+        } else if (i === points.length - 2) {
+          p1.x += dx * diff * 0.5;
+          p1.y += dy * diff * 0.5;
+          p2.x -= dx * diff * 0.5;
+          p2.y -= dy * diff * 0.5;
+        } else {
+          p1.x += dx * diff * 0.5;
+          p1.y += dy * diff * 0.5;
+          p2.x -= dx * diff * 0.5;
+          p2.y -= dy * diff * 0.5;
+        }
+      }
+    }
+
+    points[0].x = rope.anchor.x;
+    points[0].y = rope.anchor.y;
+    const end = points[points.length - 1];
+    end.x = rope.attach.x;
+    end.y = rope.attach.y;
+  }
+
+  function ropePathFromPoints(points) {
+    if (!points.length) return "";
+    let d = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const mx = (prev.x + curr.x) / 2;
+      const my = (prev.y + curr.y) / 2;
+      d += ` Q ${prev.x} ${prev.y} ${mx} ${my}`;
+    }
+    const last = points[points.length - 1];
+    d += ` T ${last.x} ${last.y}`;
+    return d;
+  }
+
+  function drawRope(rope, linePath) {
+    linePath.setAttribute("d", ropePathFromPoints(rope.points));
+  }
+
+  function drawAllRopes() {
+    cards.forEach((card) => {
+      if (!card.hidden) {
+        if (!card.leftCut) {
+          drawRope(card.leftRope, card.leftPath);
+        } else {
+          card.leftPath.setAttribute("d", "");
+        }
+
+        if (!card.rightCut) {
+          drawRope(card.rightRope, card.rightPath);
+        } else {
+          card.rightPath.setAttribute("d", "");
+        }
+      }
+    });
+  }
+
+function startSwing(card, pivotSide) {
+  card.mode = "swing";
+  card.pivotSide = pivotSide;
+  card.pivotAnchor = pivotSide === "left" ? card.leftAnchor : card.rightAnchor;
+
+  const local = pivotSide === "left" ? card.localLeft : card.localRight;
+  card.swingLocal = local;
+
+  const currentAttach = getWorldAttach(card, pivotSide);
+  const dx = currentAttach.x - card.pivotAnchor.x;
+  const dy = currentAttach.y - card.pivotAnchor.y;
+
+  card.ropeLength = Math.hypot(dx, dy);
+
+  // keep the box exactly where it is right now
+  card.swingTargetAngle = -Math.PI / 2 - Math.atan2(local.y, local.x);
+
+  card.swingVX = 0;
+  card.swingVY = 0;
+  card.swingOmega = 0;
+
+  updateRopeTargets(card);
+}
+  function startFreefall(card) {
+    const bias = card.pivotSide === "left" ? -1 : 1;
+
+    card.mode = "freefall";
+    card.vx = bias * settings.cutLinearImpulse;
+    card.vy = 120;
+    card.omega = bias * 6.2;
+    card.el.style.transition = "opacity 0.55s ease";
+  }
+
+  function cutRopeByCard(card, side) {
+    if (!card || card.hidden) return;
+    if (side === "left" && card.leftCut) return;
+    if (side === "right" && card.rightCut) return;
+
+    if (side === "left") card.leftCut = true;
+    if (side === "right") card.rightCut = true;
+
+    if (card.mode === "intact") {
+      const remainingSide = side === "left" ? "right" : "left";
+      startSwing(card, remainingSide);
+    } else if (card.mode === "swing") {
+      startFreefall(card);
+    }
+
+    drawAllRopes();
+  }
+
+  function lineSegmentsIntersect(a, b, c, d) {
+    function orient(p, q, r) {
+      return (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x);
+    }
+
+    const o1 = orient(a, b, c);
+    const o2 = orient(a, b, d);
+    const o3 = orient(c, d, a);
+    const o4 = orient(c, d, b);
+
+    return ((o1 > 0 && o2 < 0) || (o1 < 0 && o2 > 0)) &&
+           ((o3 > 0 && o4 < 0) || (o3 < 0 && o4 > 0));
+  }
+
+  function sliceHitsRope(p1, p2, ropeStart, ropeEnd, tolerance = 14) {
+    const minX1 = Math.min(p1.x, p2.x) - tolerance;
+    const maxX1 = Math.max(p1.x, p2.x) + tolerance;
+    const minY1 = Math.min(p1.y, p2.y) - tolerance;
+    const maxY1 = Math.max(p1.y, p2.y) + tolerance;
+
+    const minX2 = Math.min(ropeStart.x, ropeEnd.x) - tolerance;
+    const maxX2 = Math.max(ropeStart.x, ropeEnd.x) + tolerance;
+    const minY2 = Math.min(ropeStart.y, ropeEnd.y) - tolerance;
+    const maxY2 = Math.max(ropeStart.y, ropeEnd.y) + tolerance;
+
+    const overlaps =
+      maxX1 >= minX2 &&
+      maxX2 >= minX1 &&
+      maxY1 >= minY2 &&
+      maxY2 >= minY1;
+
+    if (!overlaps) return false;
+    return lineSegmentsIntersect(p1, p2, ropeStart, ropeEnd);
+  }
+
+  function flashSlash(p1, p2) {
+    if (slashFlash) slashFlash.remove();
+
+    const line = document.createElement("div");
+    line.style.position = "absolute";
+    line.style.left = `${p1.x}px`;
+    line.style.top = `${p1.y}px`;
+    line.style.width = `${Math.hypot(p2.x - p1.x, p2.y - p1.y)}px`;
+    line.style.height = "2px";
+    line.style.background = "rgba(255,255,255,0.9)";
+    line.style.boxShadow = "0 0 12px rgba(255,255,255,0.6)";
+    line.style.transformOrigin = "0 50%";
+    line.style.pointerEvents = "none";
+    line.style.zIndex = "40";
+    line.style.opacity = "0.9";
+    line.style.transition = "opacity 0.2s ease";
+    line.style.transform = `translate(0,0) rotate(${Math.atan2(p2.y - p1.y, p2.x - p1.x)}rad)`;
+
+    field.appendChild(line);
+    slashFlash = line;
+
+    requestAnimationFrame(() => {
+      line.style.opacity = "0";
+    });
+
+    setTimeout(() => {
+      line.remove();
+      if (slashFlash === line) slashFlash = null;
+    }, 220);
+  }
+
+  function getPointerInField(e) {
+    const rect = field.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  }
+
+  function trySlice(prevPoint, nextPoint) {
+    let cutSomething = false;
+
+    cards.forEach((card) => {
+      if (card.hidden) return;
+
+      const leftAttach = getWorldAttach(card, "left");
+      const rightAttach = getWorldAttach(card, "right");
+
+      if (!card.leftCut) {
+        if (sliceHitsRope(prevPoint, nextPoint, card.leftAnchor, leftAttach, 16)) {
+          cutRopeByCard(card, "left");
+          cutSomething = true;
+        }
+      }
+
+      if (!card.rightCut) {
+        if (sliceHitsRope(prevPoint, nextPoint, card.rightAnchor, rightAttach, 16)) {
+          cutRopeByCard(card, "right");
+          cutSomething = true;
+        }
+      }
+    });
+
+    if (cutSomething) {
+      flashSlash(prevPoint, nextPoint);
+    }
+  }
+
+  function initCards() {
+    ropeCanvas.innerHTML = "";
+    cards.length = 0;
+    document.querySelectorAll(".rope-node").forEach((n) => n.remove());
+
+    document.querySelectorAll(".suspended-card").forEach((el) => {
+      const box = el.querySelector(".card-box");
+      const rect = box.getBoundingClientRect();
+      const width = parseFloat(el.dataset.width) || rect.width;
+      const height = rect.height;
+
+      el.style.setProperty("--w", `${width}px`);
+
+   const config = getConfigFor(el.id);
+if (!config) return;
+
+const leftAnchor = getAnchorPos(el.dataset.leftAnchor);
+const rightAnchor = getAnchorPos(el.dataset.rightAnchor);
+
+const centeredX = ((leftAnchor.x + rightAnchor.x) / 2) - (width / 2);
+
+      const leftX = parseFloat(el.dataset.leftX);
+      const rightX = parseFloat(el.dataset.rightX);
+
+      const localLeft = { x: leftX - width / 2, y: -height / 2 };
+      const localRight = { x: rightX - width / 2, y: -height / 2 };
+
+      const card = {
+        el,
+        width,
+        height,
+        cx: centeredX + width / 2,
+cy: config.y + height / 2,
+        angle: 0,
+        vx: 0,
+        vy: 0,
+        omega: 0,
+        mode: "intact",
+        hidden: false,
+        leftCut: false,
+        rightCut: false,
+        leftAnchor,
+        rightAnchor,
+        localLeft,
+        localRight,
+        leftPath: makeSvgPath("rope-line"),
+        rightPath: makeSvgPath("rope-line")
+      };
+
+      const leftAttach = getWorldAttach(card, "left");
+      const rightAttach = getWorldAttach(card, "right");
+
+      card.leftRope = createRope(leftAnchor, leftAttach);
+      card.rightRope = createRope(rightAnchor, rightAttach);
+
+      card.leftLength = Math.hypot(leftAttach.x - leftAnchor.x, leftAttach.y - leftAnchor.y);
+      card.rightLength = Math.hypot(rightAttach.x - rightAnchor.x, rightAttach.y - rightAnchor.y);
+
+      card.leftBaseAngle = Math.atan2(leftAttach.y - leftAnchor.y, leftAttach.x - leftAnchor.x);
+      card.rightBaseAngle = Math.atan2(rightAttach.y - rightAnchor.y, rightAttach.x - rightAnchor.x);
+
+      ropeCanvas.appendChild(card.leftPath);
+      ropeCanvas.appendChild(card.rightPath);
+
+      syncCardElement(card);
+      cards.push(card);
+    });
+
+    drawAllRopes();
+  }
+
+  function stepCard(card, dt, time) {
+    if (card.hidden) return;
+
+    if (card.mode === "intact") {
+      const targetAngle = 0;
+      const wind = Math.sin(time * 0.0018 + card.cx * 0.01) * settings.windForce;
+      const torque = Math.sin(time * 0.0012 + card.cy * 0.01) * settings.windTorque;
+
+      card.vx += wind * dt;
+      card.vx *= 0.985;
+
+     const targetConfig = getConfigFor(card.el.id);
+const leftAnchor = getAnchorPos(card.el.dataset.leftAnchor);
+const rightAnchor = getAnchorPos(card.el.dataset.rightAnchor);
+const targetCx = (leftAnchor.x + rightAnchor.x) / 2;
+const targetCy = targetConfig.y + card.height / 2;
+
+      card.vx += (targetCx - card.cx) * settings.intactSpring * dt;
+      card.vy += (targetCy - card.cy) * settings.intactSpring * dt;
+
+      card.omega += (targetAngle - card.angle) * settings.intactAngleSpring * dt + torque * dt;
+
+      card.vx *= (1 - settings.intactDamping * dt);
+      card.vy *= (1 - settings.intactDamping * dt);
+      card.omega *= (1 - settings.intactAngleDamping * dt);
+
+      card.cx += card.vx * dt;
+      card.cy += card.vy * dt;
+      card.angle += card.omega * dt;
+
+      updateRopeTargets(card);
+      resetRopeToLine(card.leftRope, card.leftAnchor, getWorldAttach(card, "left"));
+      resetRopeToLine(card.rightRope, card.rightAnchor, getWorldAttach(card, "right"));
+    }
+
+else if (card.mode === "swing") {
+  const local = card.swingLocal;
+
+  // where the remaining rope should end up when hanging naturally
+  const targetAttachX = card.pivotAnchor.x;
+  const targetAttachY = card.pivotAnchor.y + card.ropeLength;
+
+  // gently rotate toward a natural hanging angle
+  const angleDiff = card.swingTargetAngle - card.angle;
+  card.swingOmega += angleDiff * 10 * dt;
+  card.swingOmega *= (1 - 4.2 * dt);
+  card.angle += card.swingOmega * dt;
+
+  // once angle changes, find where the center should be
+  const rotated = rotatePoint(local.x, local.y, card.angle);
+  const targetCx = targetAttachX - rotated.x;
+  const targetCy = targetAttachY - rotated.y;
+
+  // spring the card center toward that hanging position
+  card.swingVX += (targetCx - card.cx) * 14 * dt;
+  card.swingVY += (targetCy - card.cy) * 14 * dt;
+
+  card.swingVX *= (1 - 3.6 * dt);
+  card.swingVY *= (1 - 3.6 * dt);
+
+  card.cx += card.swingVX * dt;
+  card.cy += card.swingVY * dt;
+
+  updateRopeTargets(card);
+
+  if (!card.leftCut) {
+    resetRopeToLine(card.leftRope, card.leftAnchor, getWorldAttach(card, "left"));
+  }
+  if (!card.rightCut) {
+    resetRopeToLine(card.rightRope, card.rightAnchor, getWorldAttach(card, "right"));
+  }
+}
+
+    else if (card.mode === "freefall") {
+      card.vy += settings.gravity * dt;
+      card.vx *= settings.freefallLinearDamping;
+      card.vy *= settings.freefallLinearDamping;
+      card.omega *= settings.freefallAngularDamping;
+
+      card.cx += card.vx * dt;
+      card.cy += card.vy * dt;
+      card.angle += card.omega * dt;
+
+      const bottom = card.cy + card.height / 2;
+      const leftGone = card.cx + card.width / 2 < -settings.fadeDistance;
+      const rightGone = card.cx - card.width / 2 > field.offsetWidth + settings.fadeDistance;
+      const downGone = bottom > field.offsetHeight + settings.fadeDistance;
+
+      if (leftGone || rightGone || downGone) {
+        card.hidden = true;
+        card.el.style.opacity = "0";
+        card.el.style.pointerEvents = "none";
+        card.leftPath.setAttribute("d", "");
+        card.rightPath.setAttribute("d", "");
+      }
+    }
+
+    if (!card.hidden) {
+      if (!card.leftCut) simulateRope(card.leftRope, dt);
+      if (!card.rightCut) simulateRope(card.rightRope, dt);
+      syncCardElement(card);
+    }
+  }
+
+  function animate(time) {
+    const rawDt = (time - lastTime) / 1000 || settings.maxDt;
+    const dt = Math.min(rawDt, settings.maxDt);
+    lastTime = time;
+
+    cards.forEach((card) => stepCard(card, dt, time));
+    drawAllRopes();
+    requestAnimationFrame(animate);
+  }
+
+  function observeText() {
+    if (!octaviaTextContent) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+          }
+        });
+      },
+      { threshold: 0.18 }
+    );
+
+    Array.from(octaviaTextContent.children).forEach((child) => observer.observe(child));
+  }
+
+  field.addEventListener("pointerdown", (e) => {
+    slicing = true;
+    lastPointer = getPointerInField(e);
+  });
+
+  field.addEventListener("pointermove", (e) => {
+    if (!slicing) return;
+    const current = getPointerInField(e);
+
+    if (lastPointer) {
+      trySlice(lastPointer, current);
+    }
+
+    lastPointer = current;
+  });
+
+  window.addEventListener("pointerup", () => {
+    slicing = false;
+    lastPointer = null;
+  });
+
+  window.addEventListener("pointercancel", () => {
+    slicing = false;
+    lastPointer = null;
+  });
+
+  window.addEventListener("resize", () => {
+    setCanvasSize();
+    initCards();
+  });
+
+  setCanvasSize();
+  initCards();
+  observeText();
+  requestAnimationFrame(animate);
+</script>
+
+</body>
+</html>

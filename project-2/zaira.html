@@ -11,10 +11,8 @@
       --muted: rgba(245, 239, 227, 0.56);
       --cream: #f1e4c8;
       --gold: #d7b06a;
-      --gold-soft: rgba(215, 176, 106, 0.18);
-      --rose: #b66a6a;
-      --teal: #6e8d97;
-      --rust: #a05f3b;
+      --rose: #dc2828;
+      --blue: #1e5aff;
       --line: rgba(255,255,255,0.1);
       --progress: 0;
     }
@@ -27,46 +25,37 @@
 
     html, body {
       width: 100%;
-      height: 100%;
+      min-height: 100%;
     }
 
     body {
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
       font-family: Georgia, "Times New Roman", serif;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(215,176,106,0.06), transparent 28%),
-        radial-gradient(circle at 20% 20%, rgba(182,106,106,0.05), transparent 22%),
-        radial-gradient(circle at 80% 70%, rgba(110,141,151,0.05), transparent 24%),
-        linear-gradient(180deg, #070707 0%, #020202 100%);
+      background: #010101;
       color: var(--text);
     }
 
+    .page {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      isolation: isolate;
 
-.page {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  isolation: isolate;
+      --p0: 0;
+      --p1: 0;
+      --p2: 0;
 
-  --p0: 0;
-  --p1: 0;
-  --p2: 0;
-  --imageFade: 0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 210, 60, calc(0.18 + var(--p0) * 0.42)) 0%, transparent 38%),
+        radial-gradient(circle at 28% 72%, rgba(220, 40, 40, calc(0.10 + var(--p1) * 0.40)) 0%, transparent 52%),
+        radial-gradient(circle at 78% 24%, rgba(30, 90, 255, calc(0.10 + var(--p2) * 0.42)) 0%, transparent 56%),
+        radial-gradient(circle at 50% 50%, rgba(255, 210, 60, 0.10) 0%, transparent 68%),
+        linear-gradient(180deg, #050505 0%, #010101 100%);
 
-  background:
-    radial-gradient(circle at 50% 50%, rgba(215,176,106, calc(0.04 + var(--p0) * 0.22)), transparent 70%),
-    radial-gradient(circle at 18% 22%, rgba(182,106,106, calc(var(--p1) * 0.18)), transparent 70%),
-    radial-gradient(circle at 82% 24%, rgba(110,141,151, calc(var(--p2) * 0.18)), transparent 70%),
-    radial-gradient(circle at 24% 78%, rgba(160,95,59, calc(var(--p3) * 0.18)), transparent 70%),
-    radial-gradient(circle at 76% 74%, rgba(126,104,162, calc(var(--p4) * 0.16)), transparent 70%),
-    radial-gradient(circle at 52% 18%, rgba(86,113,145, calc(var(--p5) * 0.15)), transparent 70%),
-    radial-gradient(circle at 50% 10%, rgba(222,187,116, calc(var(--p6) * 0.18)), transparent 30%),
-    radial-gradient(circle at 10% 50%, rgba(241,228,200, calc(var(--p7) * 0.12)), transparent 30%),
-    linear-gradient(180deg, #070707 0%, #020202 100%);
-
-  transition: background 1.2s ease;
-}
+      transition: background 1.2s ease;
+    }
 
     .page::before {
       content: "";
@@ -89,8 +78,7 @@
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      background:
-        radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.68) 100%);
+      background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.68) 100%);
     }
 
     .back {
@@ -139,8 +127,8 @@
       letter-spacing: -0.07em;
       font-weight: 700;
       text-shadow:
-        0 0 26px rgba(215,176,106,0.08),
-        0 0 calc(8px + var(--progress) * 24px) rgba(182,106,106,0.08);
+        0 0 26px rgba(255,210,60,0.08),
+        0 0 calc(8px + var(--progress) * 24px) rgba(220,40,40,0.08);
     }
 
     .title::after {
@@ -208,14 +196,17 @@
       0%,100% { transform: translate(0,0) rotate(0deg); }
       50% { transform: translate(12px,-10px) rotate(1deg); }
     }
+
     @keyframes tracesDrift {
       0%,100% { transform: translate(0,0); }
       50% { transform: translate(-14px,10px); }
     }
+
     @keyframes wordsDrift {
       0%,100% { transform: translate(0,0); }
       50% { transform: translate(16px,-12px); }
     }
+
     @keyframes quotesDrift {
       0%,100% { transform: translate(0,0); }
       50% { transform: translate(-8px,8px); }
@@ -235,7 +226,7 @@
       height: 2px;
       border-radius: 50%;
       background: rgba(255,255,255,0.42);
-      box-shadow: 0 0 8px rgba(215,176,106,0.24);
+      box-shadow: 0 0 8px rgba(255,210,60,0.24);
       animation: dust linear infinite;
       opacity: 0.22;
     }
@@ -267,7 +258,7 @@
       height: 10px;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      background: radial-gradient(circle, rgba(215,176,106,0.85), rgba(182,106,106,0.25), transparent 70%);
+      background: radial-gradient(circle, rgba(255,210,60,0.85), rgba(220,40,40,0.25), transparent 70%);
       filter: blur(1px);
       animation: trailFade 1.2s ease-out forwards;
       mix-blend-mode: screen;
@@ -316,11 +307,16 @@
       height: 14px;
       border-radius: 50%;
       background: var(--gold);
-      box-shadow: 0 0 18px rgba(215,176,106,0.35);
+      box-shadow: 0 0 18px rgba(255,210,60,0.35);
       animation: nodeGlow 4.5s ease-in-out infinite;
       z-index: 28;
       cursor: pointer;
       transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    }
+
+    .node:hover,
+    .node.active {
+      animation: none;
     }
 
     .node::after {
@@ -342,8 +338,8 @@
     .node.active {
       background: var(--rose);
       box-shadow:
-        0 0 18px rgba(182,106,106,0.45),
-        0 0 40px rgba(215,176,106,0.18);
+        0 0 18px rgba(220,40,40,0.45),
+        0 0 40px rgba(255,210,60,0.18);
       transform: scale(1.22);
     }
 
@@ -373,16 +369,16 @@
 
     .trace.near {
       opacity: 0.95;
-      background: linear-gradient(90deg, transparent, rgba(215,176,106,0.6), rgba(110,141,151,0.5), transparent);
-      filter: drop-shadow(0 0 8px rgba(215,176,106,0.25));
+      background: linear-gradient(90deg, transparent, rgba(255,210,60,0.6), rgba(30,90,255,0.5), transparent);
+      filter: drop-shadow(0 0 8px rgba(255,210,60,0.25));
     }
 
-    .t1 { top: 31%; left: 22%; width: 16%; transform: rotate(24deg); }
-    .t2 { top: 43%; left: 18%; width: 18%; transform: rotate(-28deg); animation-delay: 1.2s; }
-    .t3 { top: 65%; left: 18%; width: 20%; transform: rotate(18deg); animation-delay: 2.1s; }
-    .t4 { top: 54%; left: 49%; width: 16%; transform: rotate(-22deg); animation-delay: 0.7s; }
-    .t5 { top: 35%; left: 59%; width: 11%; transform: rotate(34deg); animation-delay: 1.9s; }
-    .t6 { bottom: 18%; left: 47%; width: 21%; transform: rotate(10deg); animation-delay: 2.4s; }
+    .t1 { top: 31%; left: 22%; width: 16%; --rot: 24deg; transform: rotate(var(--rot)); }
+    .t2 { top: 43%; left: 18%; width: 18%; --rot: -28deg; transform: rotate(var(--rot)); animation-delay: 1.2s; }
+    .t3 { top: 65%; left: 18%; width: 20%; --rot: 18deg; transform: rotate(var(--rot)); animation-delay: 2.1s; }
+    .t4 { top: 54%; left: 49%; width: 16%; --rot: -22deg; transform: rotate(var(--rot)); animation-delay: 0.7s; }
+    .t5 { top: 35%; left: 59%; width: 11%; --rot: 34deg; transform: rotate(var(--rot)); animation-delay: 1.9s; }
+    .t6 { bottom: 18%; left: 47%; width: 21%; --rot: 10deg; transform: rotate(var(--rot)); animation-delay: 2.4s; }
 
     @keyframes flicker {
       0%,100% { opacity: 0.16; }
@@ -399,12 +395,12 @@
       padding-top: 6px;
       z-index: 19;
       white-space: nowrap;
-      transition: color 0.5s ease, border-color 0.5s ease;
+      transition: color 0.5s ease, border-color 0.5s ease, transform 0.25s ease;
     }
 
     .measure.near {
       color: rgba(241,228,200,0.9);
-      border-color: rgba(215,176,106,0.35);
+      border-color: rgba(255,210,60,0.35);
     }
 
     .m1 { top: 25%; left: 42%; width: 120px; }
@@ -428,8 +424,7 @@
 
     .quote.near {
       opacity: 1;
-      transform: translateY(-6px);
-      border-color: rgba(215,176,106,0.3);
+      border-color: rgba(255,210,60,0.3);
     }
 
     .q1 { top: 24%; right: 5%; }
@@ -450,11 +445,11 @@
     }
 
     .floating-word.near {
-      color: rgba(215,176,106,0.92);
+      color: rgba(255,210,60,0.92);
       opacity: 1;
       text-shadow:
-        0 0 16px rgba(215,176,106,0.22),
-        0 0 34px rgba(182,106,106,0.16);
+        0 0 16px rgba(255,210,60,0.22),
+        0 0 34px rgba(220,40,40,0.16);
     }
 
     .w1  { top: 20%; left: 9%; font-size: 0.92rem; animation-duration: 12s; }
@@ -481,7 +476,7 @@
       max-width: 280px;
       padding: 14px 16px;
       background: rgba(8,8,8,0.78);
-      border: 1px solid rgba(215,176,106,0.28);
+      border: 1px solid rgba(255,210,60,0.28);
       color: var(--cream);
       backdrop-filter: blur(10px);
       font-size: 0.92rem;
@@ -492,8 +487,8 @@
       transform: translate(-50%, -50%) scale(0.94);
       transition: opacity 0.3s ease, transform 0.3s ease;
       box-shadow:
-        0 0 30px rgba(215,176,106,0.12),
-        0 0 60px rgba(182,106,106,0.08);
+        0 0 30px rgba(255,210,60,0.12),
+        0 0 60px rgba(220,40,40,0.08);
     }
 
     .memory-popup.show {
@@ -516,7 +511,7 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      border: 1px solid rgba(215,176,106,0.45);
+      border: 1px solid rgba(255,210,60,0.45);
       transform: translate(-50%, -50%);
       pointer-events: none;
       z-index: 21;
@@ -550,6 +545,74 @@
       pointer-events: none;
     }
 
+    .zaira-text {
+      position: relative;
+      width: 100%;
+      min-height: 120vh;
+      padding: 140px 20px 160px;
+      background:
+        linear-gradient(to bottom, transparent 0%, #020202 25%, #020202 100%);
+      z-index: 5;
+    }
+
+    .zaira-text::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, rgba(255,210,60,0.4), transparent);
+    }
+
+    .zaira-text::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at top, rgba(255,210,60,0.06), transparent 60%);
+    }
+
+    .zaira-text-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: left;
+      position: relative;
+      z-index: 2;
+    }
+
+    .zaira-text h2 {
+      font-size: 2.5rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 40px;
+      color: rgba(245,239,227,0.9);
+      text-shadow: 0 0 18px rgba(255,210,60,0.15);
+    }
+
+    .zaira-text-content {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: rgba(245,239,227,0.62);
+      font-family: Georgia, "Times New Roman", serif;
+      position: relative;
+    }
+
+    .zaira-text-content > * {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .zaira-text-content > *.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+.zaira-text-content p {
+  margin-bottom: 5em;
+  text-indent: 1.5em;
+}
     @media (max-width: 1100px) {
       .title-wrap {
         width: calc(100vw - 70px);
@@ -584,6 +647,10 @@
 
       .w8, .w11 {
         display: none;
+      }
+
+      .zaira-text {
+        padding: 110px 20px 120px;
       }
     }
   </style>
@@ -624,6 +691,7 @@
           <div class="trace t5 reactive"></div>
           <div class="trace t6 reactive"></div>
 
+          <div class="measure m1 reactive">measured return</div>
           <div class="measure m2 reactive">distance retained</div>
           <div class="measure m3 reactive">event as residue</div>
           <div class="measure m4 reactive">alignment remembered</div>
@@ -657,165 +725,146 @@
 
         <div class="layer quotes">
           <div class="quote q1 reactive">The city does not tell its past directly. It carries it in relation.</div>
-          <div class="quote q2 reactive">Its memory survives in marks and scars.</div>
+          <div class="quote q2 reactive">Its memory survives in marks, intervals, and repeated routes.</div>
           <div class="quote q3 reactive">What is visible is only the surface of what remains.</div>
         </div>
       </div>
     </section>
 
-    <div class="center-caption">Move, hover, and awaken the city</div>
-
-    
+    <div class="center-caption">Move, hover, then descend</div>
   </main>
 
+  <section class="zaira-text">
+    <div class="zaira-text-inner">
+ <div class="zaira-text-content" id="zairaTextContent">
+  <p>
+    In Zaira, memory is not separate from architecture. It is embedded within it. Streets, windows, railings, poles, and walls do not simply form a setting for life; they absorb it, storing the force of what has happened before. The city carries its past in traces rather than declarations, in marks, intervals, scars, and distances that remain long after the original event has disappeared. What matters is not only the object itself, but the life once attached to it, and the way that attachment continues to shape how the city is read. A wall is no longer only a wall once it has held an impact, framed a ritual, or divided one moment from another. A stair remembers movement. A railing remembers the pressure of a hand. A window remembers the act of looking out, waiting, returning, and watching the street below.
+  </p>
 
+  <p>
+    Zaira is a city where memory does not sit outside the built environment as a story told afterward. It is woven into the structure of the city itself. Every measure between two points contains something invisible but still present. The distance from one lamp to another, the spacing of columns, the width of a street, the pause before a corner turns—these are not neutral facts. They are charged by repetition. They are shaped by processions, meetings, routines, accidents, and losses. The city becomes legible not because it explains itself directly, but because it quietly accumulates evidence. Memory settles into architecture the way weather settles into stone: gradually, persistently, and in ways that change how the surface is understood.
+  </p>
 
-<script>
-  const page = document.getElementById("page");
-  const field = document.getElementById("field");
-  const fieldInner = document.getElementById("fieldInner");
-  const dust = document.querySelector(".memory-dust");
-  const trail = document.getElementById("cursorTrail");
-  const popup = document.getElementById("memoryPopup");
-  const nodes = document.querySelectorAll(".memory-node");
-  const reactiveEls = document.querySelectorAll(".reactive");
-  const progressNote = document.getElementById("progressNote");
+  <p>
+    To experience Zaira is therefore to read the city relationally. One does not understand it by isolating buildings, naming districts, or cataloguing forms as separate objects. Instead, one senses how one measure leads to another, how one route repeats, how one mark answers another across space. Meaning emerges through connection. A passage gains significance because of what it links. A corner matters because of the turn it has made habitual. A facade matters because of the shadow it casts at a certain hour, or because someone once stood beneath it waiting. The visible city is only the outer layer. Beneath it lies a denser and less stable city made of memory, where every alignment suggests a prior action and every distance contains a history that is still active.
+  </p>
 
-  let targetX = 0;
-  let targetY = 0;
-  let currentX = 0;
-  let currentY = 0;
-  let activated = new Set();
-  let moveTick = 0;
-  let activeNode = null;
+  <p>
+    In this way, Zaira resists the idea that architecture is static. Its spaces are never only formal compositions. They are fields of retention. They hold echoes of movement, use, and emotion. Even empty space is never truly empty, because it has already been shaped by what occurred within it. A plaza remembers gathering. A threshold remembers hesitation. A narrow passage remembers compression, speed, and the bodies that adjusted themselves to move through it. The city is constantly carrying what is no longer visible, and that hidden accumulation gives weight to everything that remains. What seems still is actually layered with prior motion.
+  </p>
 
-  for (let i = 0; i < 34; i++) {
-    const dot = document.createElement("span");
-    dot.style.left = Math.random() * 100 + "vw";
-    dot.style.top = 25 + Math.random() * 75 + "vh";
-    dot.style.animationDuration = 8 + Math.random() * 10 + "s";
-    dot.style.animationDelay = Math.random() * 8 + "s";
-    dot.style.opacity = 0.12 + Math.random() * 0.22;
-    dust.appendChild(dot);
-  }
+  <p>
+    This webpage imagines Zaira as an active memory field rather than a static representation. Instead of presenting the city all at once, it allows it to emerge through interaction, delay, and partial revelation. Fragments appear, colors intensify, hidden nodes awaken, and relationships become clearer the longer one stays with the page. The intention is not simply to illustrate the city, but to make the act of discovering it feel gradual and reconstructive. The interface behaves less like a map and more like a surface of buried traces, where attention causes certain things to rise while others remain submerged. In that sense, the city is never delivered as a complete image. It has to be recovered.
+  </p>
 
-  function updateProgress() {
-  const count = activated.size;
-  const progress = count / nodes.length;
+  <p>
+    Scrolling downward should feel like descending further into the memory structure of Zaira. The text should not just sit there passively, but come into view in stages, as though each paragraph is being retrieved from beneath the visible surface. That slow reveal matches the logic of the city itself: memory does not arrive instantly or all at once. It surfaces in fragments. It sharpens through return. It becomes more legible the longer one remains attentive. Zaira is therefore not simply a city of memory, but a city whose very form depends on memory for its meaning. Without those invisible attachments, its streets and objects would remain incomplete. With them, the city becomes dense, unstable, and alive.
+  </p>
+</div>
+    </div>
+  </section>
 
-  page.style.setProperty("--progress", progress.toFixed(2));
-  progressNote.textContent = `${count} memor${count === 1 ? "y" : "ies"} activated`;
+  <script>
+    const page = document.getElementById("page");
+    const field = document.getElementById("field");
+    const fieldInner = document.getElementById("fieldInner");
+    const dust = document.querySelector(".memory-dust");
+    const trail = document.getElementById("cursorTrail");
+    const popup = document.getElementById("memoryPopup");
+    const nodes = document.querySelectorAll(".memory-node");
+    const reactiveEls = document.querySelectorAll(".reactive");
+    const progressNote = document.getElementById("progressNote");
+    const zairaTextContent = document.getElementById("zairaTextContent");
 
-  const steps = [
-    count >= 1 ? 1 : 0, // gold
-    count >= 2 ? 1 : 0, // rose
-    count >= 3 ? 1 : 0, // teal
-    count >= 4 ? 1 : 0, // rust
-    count >= 5 ? 1 : 0, // violet
-    count >= 6 ? 1 : 0, // blue-gray
-    count >= 7 ? 1 : 0, // amber
-    count >= 8 ? 1 : 0  // ivory wash
-  ];
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let activated = new Set();
+    let moveTick = 0;
+    let activeNode = null;
+    let popupLocked = false;
+    let popupTimeout = null;
 
-  steps.forEach((value, i) => {
-    page.style.setProperty(`--p${i}`, value);
-  });
-}
-
-  function makeRipple(x, y) {
-    const ripple = document.createElement("div");
-    ripple.className = "ripple";
-    ripple.style.left = x + "px";
-    ripple.style.top = y + "px";
-    page.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 1400);
-  }
-
-  function showPopupForNode(node) {
-    const rect = node.getBoundingClientRect();
-
-    const popupX = rect.left + rect.width / 2 + 120;
-    const popupY = rect.top + rect.height / 2 - 50;
-
-    popup.innerHTML = `<strong>memory fragment</strong>${node.dataset.memory}`;
-    popup.style.left = `${popupX}px`;
-    popup.style.top = `${popupY}px`;
-    popup.classList.add("show");
-  }
-
-  function hidePopup() {
-    popup.classList.remove("show");
-    activeNode = null;
-  }
-
-  function spawnTrail(x, y) {
-    const dot = document.createElement("div");
-    dot.className = "trail-dot";
-    dot.style.left = x + "px";
-    dot.style.top = y + "px";
-    trail.appendChild(dot);
-    setTimeout(() => dot.remove(), 1200);
-  }
-
-  function activateNode(node) {
-    if (!activated.has(node)) {
-      activated.add(node);
-      node.classList.add("active");
-      updateProgress();
-    }
-  }
-
-  document.addEventListener("mousemove", (e) => {
-    const xNorm = (e.clientX / window.innerWidth - 0.5);
-    const yNorm = (e.clientY / window.innerHeight - 0.5);
-    targetX = xNorm * 20;
-    targetY = yNorm * 20;
-
-    moveTick++;
-    if (moveTick % 2 === 0) {
-      spawnTrail(e.clientX, e.clientY);
+    for (let i = 0; i < 34; i++) {
+      const dot = document.createElement("span");
+      dot.style.left = Math.random() * 100 + "vw";
+      dot.style.top = 25 + Math.random() * 75 + "vh";
+      dot.style.animationDuration = 8 + Math.random() * 10 + "s";
+      dot.style.animationDelay = Math.random() * 8 + "s";
+      dot.style.opacity = 0.12 + Math.random() * 0.22;
+      dust.appendChild(dot);
     }
 
-    reactiveEls.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = e.clientX - cx;
-      const dy = e.clientY - cy;
-      const dist = Math.hypot(dx, dy);
+    function updateProgress() {
+      const count = activated.size;
+      const progress = count / nodes.length;
 
-      if (dist < 180) {
-        el.classList.add("near");
-        const strength = (180 - dist) / 180;
-        const shiftX = dx * -0.025 * strength;
-        const shiftY = dy * -0.025 * strength;
-        el.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
-      } else {
-        el.classList.remove("near");
-        el.style.transform = "";
+      page.style.setProperty("--progress", progress.toFixed(2));
+      progressNote.textContent = `${count} memor${count === 1 ? "y" : "ies"} activated`;
+
+      page.style.setProperty("--p0", Math.min(count / 3, 1));
+      page.style.setProperty("--p1", Math.max(0, (count - 2) / 3));
+      page.style.setProperty("--p2", Math.max(0, (count - 4) / 4));
+    }
+
+    function makeRipple(x, y) {
+      const ripple = document.createElement("div");
+      ripple.className = "ripple";
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      page.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 1400);
+    }
+
+    function showPopupForNode(node) {
+      const rect = node.getBoundingClientRect();
+
+      let popupX = rect.left + rect.width / 2 + 120;
+      let popupY = rect.top + rect.height / 2 - 50;
+
+      const maxX = window.innerWidth - 160;
+      const minX = 160;
+      const maxY = window.innerHeight - 100;
+      const minY = 100;
+
+      popupX = Math.max(minX, Math.min(maxX, popupX));
+      popupY = Math.max(minY, Math.min(maxY, popupY));
+
+      popup.innerHTML = `<strong>memory fragment</strong>${node.dataset.memory}`;
+      popup.style.left = `${popupX}px`;
+      popup.style.top = `${popupY}px`;
+      popup.classList.add("show");
+    }
+
+    function hidePopup() {
+      popup.classList.remove("show");
+      activeNode = null;
+    }
+
+    function spawnTrail(x, y) {
+      const dot = document.createElement("div");
+      dot.className = "trail-dot";
+      dot.style.left = `${x}px`;
+      dot.style.top = `${y}px`;
+      trail.appendChild(dot);
+      setTimeout(() => dot.remove(), 1200);
+    }
+
+    function activateNode(node) {
+      if (!activated.has(node)) {
+        activated.add(node);
+        node.classList.add("active");
+        updateProgress();
       }
-    });
-  });
+    }
 
-  function animateField() {
-    currentX += (targetX - currentX) * 0.045;
-    currentY += (targetY - currentY) * 0.045;
+    function triggerMemory(node) {
+      if (popupLocked && activeNode === node) return;
 
-    field.style.transform =
-      `perspective(1400px) rotateX(${-currentY * 0.18}deg) rotateY(${currentX * 0.18}deg)`;
-
-    fieldInner.style.transform =
-      `translate(${currentX * 1.1}px, ${currentY * 1.1}px) scale(${1.01 + Math.abs(currentX) * 0.00012})`;
-
-    requestAnimationFrame(animateField);
-  }
-  animateField();
-
-  nodes.forEach((node) => {
-    node.addEventListener("mouseenter", () => {
-      if (activeNode === node) return;
-
+      popupLocked = true;
       activeNode = node;
+
       activateNode(node);
       showPopupForNode(node);
 
@@ -823,29 +872,113 @@
       const x = rect.left + rect.width / 2;
       const y = rect.top + rect.height / 2;
       makeRipple(x, y);
+
+      clearTimeout(popupTimeout);
+      popupTimeout = setTimeout(() => {
+        popupLocked = false;
+      }, 350);
+    }
+
+    document.addEventListener("mousemove", (e) => {
+      const xNorm = (e.clientX / window.innerWidth - 0.5);
+      const yNorm = (e.clientY / window.innerHeight - 0.5);
+      targetX = xNorm * 20;
+      targetY = yNorm * 20;
+
+      moveTick++;
+      if (moveTick % 2 === 0) {
+        spawnTrail(e.clientX, e.clientY);
+      }
+
+      reactiveEls.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < 180) {
+          el.classList.add("near");
+          const strength = (180 - dist) / 180;
+          const shiftX = dx * -0.025 * strength;
+          const shiftY = dy * -0.025 * strength;
+
+          if (el.classList.contains("trace")) {
+            el.style.transform = `translate(${shiftX}px, ${shiftY}px) rotate(${getComputedStyle(el).getPropertyValue('--rot')})`;
+          } else {
+            el.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
+          }
+        } else {
+          el.classList.remove("near");
+          if (el.classList.contains("trace")) {
+            el.style.transform = `rotate(${getComputedStyle(el).getPropertyValue('--rot')})`;
+          } else {
+            el.style.transform = "";
+          }
+        }
+      });
     });
 
-    node.addEventListener("mouseleave", () => {
-      if (activeNode === node) {
+    function animateField() {
+      currentX += (targetX - currentX) * 0.045;
+      currentY += (targetY - currentY) * 0.045;
+
+      field.style.transform =
+        `perspective(1400px) rotateX(${-currentY * 0.18}deg) rotateY(${currentX * 0.18}deg)`;
+
+      fieldInner.style.transform =
+        `translate(${currentX * 1.1}px, ${currentY * 1.1}px) scale(${1.01 + Math.abs(currentX) * 0.00012})`;
+
+      requestAnimationFrame(animateField);
+    }
+
+    animateField();
+
+    nodes.forEach((node) => {
+      node.addEventListener("mouseenter", () => {
+        triggerMemory(node);
+      });
+
+      node.addEventListener("click", () => {
+        triggerMemory(node);
+      });
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!activeNode) return;
+
+      const rect = activeNode.getBoundingClientRect();
+      const padding = 24;
+      const inside =
+        e.clientX >= rect.left - padding &&
+        e.clientX <= rect.right + padding &&
+        e.clientY >= rect.top - padding &&
+        e.clientY <= rect.bottom + padding;
+
+      if (!inside) {
         hidePopup();
       }
     });
 
-    node.addEventListener("click", () => {
-      activateNode(node);
-      showPopupForNode(node);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+          }
+        });
+      },
+      { threshold: 0.18 }
+    );
 
-      const rect = node.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      makeRipple(x, y);
-    });
-  });
+    function observeTextChildren() {
+      const children = zairaTextContent.children;
+      Array.from(children).forEach((child) => observer.observe(child));
+    }
 
-  updateProgress();
-
-</script>
-
+    observeTextChildren();
+    updateProgress();
+  </script>
 </body>
 </html>
-
