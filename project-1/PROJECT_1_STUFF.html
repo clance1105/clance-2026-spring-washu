@@ -35,3 +35,95 @@
 
 </body>
 </html>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #f4f7ff;
+    background: radial-gradient(circle at top, #1b1f4a 0%, #090b1a 45%, #03030a 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 30px;
+    background: rgba(10, 15, 40, 0.75);
+    border: 1px solid rgba(173, 216, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(120, 170, 255, 0.15);
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 2;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #c9d9ff;
+    text-shadow: 0 0 10px rgba(170, 210, 255, 0.5);
+}
+
+h2 {
+    color: #9fd3ff;
+    margin-top: 30px;
+    border-left: 4px solid #7f8cff;
+    padding-left: 10px;
+}
+
+p {
+    color: #dbe6ff;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    margin: 10px 0;
+}
+
+a {
+    color: #8fe3ff;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: white;
+    text-shadow: 0 0 8px #8fe3ff;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #7f8cff, transparent);
+    margin: 25px 0;
+}
+
+/* star background */
+.stars {
+    position: fixed;
+    inset: 0;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, white, transparent),
+        radial-gradient(1.5px 1.5px at 100px 80px, #cce6ff, transparent),
+        radial-gradient(2px 2px at 200px 150px, white, transparent),
+        radial-gradient(1.5px 1.5px at 300px 40px, #d6f0ff, transparent),
+        radial-gradient(2px 2px at 400px 120px, white, transparent),
+        radial-gradient(1.5px 1.5px at 500px 200px, #bcdcff, transparent),
+        radial-gradient(2px 2px at 650px 90px, white, transparent),
+        radial-gradient(1.5px 1.5px at 800px 160px, #d9f3ff, transparent);
+    background-repeat: repeat;
+    background-size: 900px 300px;
+    opacity: 0.8;
+    animation: twinkle 6s linear infinite;
+}
+
+@keyframes twinkle {
+    0%,100% {opacity:0.7;}
+    50% {opacity:1;}
+}
+</style>
+</head>
